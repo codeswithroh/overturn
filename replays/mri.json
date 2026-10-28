@@ -1,0 +1,610 @@
+[
+ {
+  "t": 0,
+  "e": {
+   "type": "mode",
+   "replay": true
+  }
+ },
+ {
+  "t": 50,
+  "e": {
+   "type": "step",
+   "id": "read",
+   "status": "running"
+  }
+ },
+ {
+  "t": 1890,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "read",
+    "tier": "nano",
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "ms": 1840,
+    "inTok": 1310,
+    "outTok": 402,
+    "cost": 0.00017507999999999998
+   }
+  }
+ },
+ {
+  "t": 1890,
+  "e": {
+   "type": "step",
+   "id": "read",
+   "status": "done",
+   "detail": "Lonestar United Health Plans \u00b7 medical necessity"
+  }
+ },
+ {
+  "t": 1890,
+  "e": {
+   "type": "partial",
+   "key": "facts",
+   "value": {
+    "insurer": "Lonestar United Health Plans",
+    "planType": "employer",
+    "state": "TX",
+    "memberName": "Dana Whitfield",
+    "claimNumber": "UM-2026-1017733",
+    "serviceDenied": "MRI lumbar spine without contrast",
+    "procedureCodes": [
+     "72148"
+    ],
+    "diagnosisCodes": [
+     "M54.16",
+     "M51.26"
+    ],
+    "denialDate": "2026-10-14",
+    "denialCategory": "medical_necessity",
+    "denialReasonQuote": "The requested imaging does not meet medical necessity criteria under Clinical Policy CP-RAD-114 (Advanced Imaging of the Spine). ... The documentation submitted does not demonstrate failure of conservative therapy.",
+    "criteriaCited": "CP-RAD-114 (Advanced Imaging of the Spine)",
+    "statedAppealDeadlineDays": 180,
+    "urgent": false,
+    "plainEnglish": "Your plan says an MRI is only needed after at least 6 weeks of treatment like physical therapy has not worked, and they say your doctor's paperwork didn't show that. If you did 6+ weeks of therapy and still have leg symptoms, this is usually fixable by sending the therapy records and a doctor's letter."
+   }
+  }
+ },
+ {
+  "t": 1970,
+  "e": {
+   "type": "step",
+   "id": "plan",
+   "status": "running"
+  }
+ },
+ {
+  "t": 4620,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "plan",
+    "tier": "super",
+    "model": "nvidia/nemotron-3-super-120b-a12b",
+    "ms": 2650,
+    "inTok": 820,
+    "outTok": 388,
+    "cost": 0.0005952
+   }
+  }
+ },
+ {
+  "t": 4620,
+  "e": {
+   "type": "step",
+   "id": "plan",
+   "status": "done",
+   "detail": "5 queries"
+  }
+ },
+ {
+  "t": 4620,
+  "e": {
+   "type": "partial",
+   "key": "queries",
+   "value": [
+    {
+     "q": "Lonestar United CP-RAD-114 advanced imaging of the spine clinical policy",
+     "purpose": "Read the insurer's own criteria the reviewer applied"
+    },
+    {
+     "q": "ACR Appropriateness Criteria low back pain radiculopathy MRI after 6 weeks conservative management",
+     "purpose": "Professional guideline supporting MRI"
+    },
+    {
+     "q": "lumbar radiculopathy persistent symptoms MRI indication evidence",
+     "purpose": "Clinical evidence for imaging with radiculopathy"
+    },
+    {
+     "q": "ERISA claims procedure appeal rights 29 CFR 2560.503-1 medical judgment reviewer",
+     "purpose": "Federal appeal rights for employer plans"
+    },
+    {
+     "q": "Texas external review independent review organization health plan denial",
+     "purpose": "State external review route"
+    }
+   ]
+  }
+ },
+ {
+  "t": 4680,
+  "e": {
+   "type": "step",
+   "id": "research",
+   "status": "running"
+  }
+ },
+ {
+  "t": 4980,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "research",
+    "tier": "tavily",
+    "model": "tavily/search:advanced",
+    "ms": 1420,
+    "inTok": 0,
+    "outTok": 0,
+    "cost": 0.016
+   }
+  }
+ },
+ {
+  "t": 5100,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "research",
+    "tier": "tavily",
+    "model": "tavily/search:advanced",
+    "ms": 1610,
+    "inTok": 0,
+    "outTok": 0,
+    "cost": 0.016
+   }
+  }
+ },
+ {
+  "t": 5220,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "research",
+    "tier": "tavily",
+    "model": "tavily/search:advanced",
+    "ms": 1380,
+    "inTok": 0,
+    "outTok": 0,
+    "cost": 0.016
+   }
+  }
+ },
+ {
+  "t": 5340,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "research",
+    "tier": "tavily",
+    "model": "tavily/search:advanced",
+    "ms": 1750,
+    "inTok": 0,
+    "outTok": 0,
+    "cost": 0.016
+   }
+  }
+ },
+ {
+  "t": 5460,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "research",
+    "tier": "tavily",
+    "model": "tavily/search:advanced",
+    "ms": 1530,
+    "inTok": 0,
+    "outTok": 0,
+    "cost": 0.016
+   }
+  }
+ },
+ {
+  "t": 5640,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "research",
+    "tier": "nano",
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "ms": 900,
+    "inTok": 1650,
+    "outTok": 140,
+    "cost": 0.0001326
+   }
+  }
+ },
+ {
+  "t": 5820,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "research",
+    "tier": "nano",
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "ms": 937,
+    "inTok": 1690,
+    "outTok": 149,
+    "cost": 0.00013716
+   }
+  }
+ },
+ {
+  "t": 6000,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "research",
+    "tier": "nano",
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "ms": 974,
+    "inTok": 1730,
+    "outTok": 158,
+    "cost": 0.00014172
+   }
+  }
+ },
+ {
+  "t": 6180,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "research",
+    "tier": "nano",
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "ms": 1011,
+    "inTok": 1770,
+    "outTok": 167,
+    "cost": 0.00014628
+   }
+  }
+ },
+ {
+  "t": 6360,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "research",
+    "tier": "nano",
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "ms": 1048,
+    "inTok": 1810,
+    "outTok": 176,
+    "cost": 0.00015083999999999999
+   }
+  }
+ },
+ {
+  "t": 6540,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "research",
+    "tier": "nano",
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "ms": 1085,
+    "inTok": 1850,
+    "outTok": 185,
+    "cost": 0.0001554
+   }
+  }
+ },
+ {
+  "t": 6720,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "research",
+    "tier": "nano",
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "ms": 1122,
+    "inTok": 1890,
+    "outTok": 194,
+    "cost": 0.00015995999999999998
+   }
+  }
+ },
+ {
+  "t": 6900,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "research",
+    "tier": "nano",
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "ms": 1159,
+    "inTok": 1930,
+    "outTok": 203,
+    "cost": 0.00016451999999999998
+   }
+  }
+ },
+ {
+  "t": 7080,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "research",
+    "tier": "nano",
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "ms": 1196,
+    "inTok": 1970,
+    "outTok": 212,
+    "cost": 0.00016907999999999997
+   }
+  }
+ },
+ {
+  "t": 7260,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "research",
+    "tier": "nano",
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "ms": 1233,
+    "inTok": 2010,
+    "outTok": 221,
+    "cost": 0.00017364
+   }
+  }
+ },
+ {
+  "t": 7440,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "research",
+    "tier": "nano",
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "ms": 1270,
+    "inTok": 2050,
+    "outTok": 230,
+    "cost": 0.0001782
+   }
+  }
+ },
+ {
+  "t": 7640,
+  "e": {
+   "type": "step",
+   "id": "research",
+   "status": "done",
+   "detail": "4 usable sources"
+  }
+ },
+ {
+  "t": 7640,
+  "e": {
+   "type": "partial",
+   "key": "sources",
+   "value": [
+    {
+     "id": "S1",
+     "title": "ACR Appropriateness Criteria: Low Back Pain",
+     "url": "https://acsearch.acr.org/docs/69483/Narrative/",
+     "facts": [
+      {
+       "claim": "For subacute or chronic low back pain with radiculopathy that persists after 6 weeks of optimal medical management, in a surgery or intervention candidate, MRI lumbar spine without IV contrast is rated Usually Appropriate.",
+       "quote": "MRI lumbar spine without IV contrast ... Usually Appropriate"
+      }
+     ]
+    },
+    {
+     "id": "S2",
+     "title": "29 CFR 2560.503-1 \u2014 Claims procedure",
+     "url": "https://www.ecfr.gov/current/title-29/subtitle-B/chapter-XXV/subchapter-F/part-2560/section-2560.503-1",
+     "facts": [
+      {
+       "claim": "On appeal of a medical-judgment denial, the plan must consult a health care professional with training and experience in the relevant field.",
+       "quote": "consult with a health care professional who has appropriate training and experience in the field of medicine involved in the medical judgment"
+      },
+      {
+       "claim": "The claimant is entitled to copies of all documents relevant to the claim, free of charge.",
+       "quote": "upon request and free of charge, reasonable access to, and copies of, all documents, records, and other information relevant to the claimant's claim"
+      }
+     ]
+    },
+    {
+     "id": "S3",
+     "title": "Internal appeals | HealthCare.gov",
+     "url": "https://www.healthcare.gov/appeal-insurance-company-decision/internal-appeals/",
+     "facts": [
+      {
+       "claim": "An internal appeal must be filed within 180 days of receiving the denial notice.",
+       "quote": "You must file your internal appeal within 180 days (6 months) of receiving notice that your claim was denied"
+      }
+     ]
+    },
+    {
+     "id": "S4",
+     "title": "External review | HealthCare.gov",
+     "url": "https://www.healthcare.gov/appeal-insurance-company-decision/external-review/",
+     "facts": [
+      {
+       "claim": "If the internal appeal fails, the member can request an independent external review.",
+       "quote": "you have the right to an independent external review"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "t": 7720,
+  "e": {
+   "type": "step",
+   "id": "argue",
+   "status": "running"
+  }
+ },
+ {
+  "t": 29120,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "argue",
+    "tier": "ultra",
+    "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+    "ms": 21400,
+    "inTok": 2380,
+    "outTok": 2915,
+    "cost": 0.011125
+   }
+  }
+ },
+ {
+  "t": 29120,
+  "e": {
+   "type": "step",
+   "id": "argue",
+   "status": "done",
+   "detail": "390 words"
+  }
+ },
+ {
+  "t": 29120,
+  "e": {
+   "type": "partial",
+   "key": "strategy",
+   "value": "- The denial rests on one factual claim: that conservative therapy was not documented. That is a records gap, not a clinical disagreement. Close it and the stated reason disappears.\n- The insurer's own criterion (6 weeks of conservative therapy) matches the ACR guideline, which rates MRI as Usually Appropriate for radiculopathy persisting past 6 weeks [S1]. Dana is at 7 weeks.\n- The reviewer was board-certified in Family Medicine. For a spine-imaging judgment, ERISA rules require consulting a professional with training in the relevant field [S2]. Ask for a spine or radiology reviewer.\n- Request the full claim file [S2] and a peer-to-peer review so Dr. Raman can present the exam findings directly.\n- State plainly that you will pursue external review [S4]. Insurers settle files they expect to lose."
+  }
+ },
+ {
+  "t": 29120,
+  "e": {
+   "type": "partial",
+   "key": "letter",
+   "value": "October 28, 2026\n\nLUH Appeals Unit\nP.O. Box 44190\nAustin, TX 78744\nFax: (512) 555-0143\n\nRe: Request for internal appeal \u2014 Reference # UM-2026-1017733\nMember: Dana Whitfield, Member ID LUH-88231904\nGroup: Brazos Logistics LLC, Employer Group Plan #20417\nService: MRI lumbar spine without contrast (CPT 72148)\n\nTo the Appeals Unit:\n\nI am appealing the October 14, 2026 decision denying an MRI of my lumbar spine, requested by Dr. Priya Raman of Hill Country Spine & Sports. I request that you reverse this decision and approve the MRI.\n\nYour notice gives one reason: that my records do not show failure of at least 6 weeks of conservative therapy under Clinical Policy CP-RAD-114. That is a gap in the paperwork, not in my care. I completed [ATTACH: number] physical therapy sessions between [ATTACH: start date] and [ATTACH: end date], about 7 weeks, along with [ATTACH: medications tried]. My leg numbness and radiating pain have persisted. The therapy notes and Dr. Raman's letter of medical necessity are enclosed.\n\nWith that documentation, the MRI meets your own criterion. It is also what the national standard recommends. The American College of Radiology rates MRI of the lumbar spine without contrast as Usually Appropriate for low back pain with radiculopathy that persists after 6 weeks of optimal medical management [S1]. My diagnoses, lumbar radiculopathy (M54.16) and disc displacement (M51.26), are exactly this situation.\n\nI also ask that this appeal be reviewed by a physician with training in spine care or radiology. The original decision was made by a reviewer board-certified in Family Medicine. Federal claims rules require that an appeal involving medical judgment be decided in consultation with a health care professional who has appropriate training and experience in the field of medicine involved [S2].\n\nPlease also:\n1. Send me, free of charge, copies of all documents, records and other information relevant to my claim, including the full text of CP-RAD-114 and the reviewer's notes [S2].\n2. Arrange a peer-to-peer review between your medical reviewer and Dr. Raman before a decision is made.\n\nI am filing within the 180-day window stated in your notice [S3]. If this appeal is denied, I will request an independent external review [S4].\n\nThank you for your prompt attention.\n\nSincerely,\n\nDana Whitfield\n[ATTACH: phone, email, signature]\n\nEnclosures: physical therapy notes; letter of medical necessity from Dr. Raman; copy of denial notice"
+  }
+ },
+ {
+  "t": 29120,
+  "e": {
+   "type": "partial",
+   "key": "missing",
+   "value": [
+    "Physical therapy visit notes showing dates and number of sessions (proves the 6-week requirement)",
+    "Letter of medical necessity from Dr. Raman citing the neurological exam findings",
+    "List of medications tried (NSAIDs, muscle relaxants, etc.) with dates",
+    "Copy of the October 14 denial notice"
+   ]
+  }
+ },
+ {
+  "t": 29200,
+  "e": {
+   "type": "step",
+   "id": "verify",
+   "status": "running"
+  }
+ },
+ {
+  "t": 31410,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "verify",
+    "tier": "nano",
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "ms": 2210,
+    "inTok": 1460,
+    "outTok": 310,
+    "cost": 0.000162
+   }
+  }
+ },
+ {
+  "t": 31410,
+  "e": {
+   "type": "step",
+   "id": "verify",
+   "status": "done",
+   "detail": "4/5 citations supported"
+  }
+ },
+ {
+  "t": 31410,
+  "e": {
+   "type": "partial",
+   "key": "checks",
+   "value": [
+    {
+     "sentence": "The American College of Radiology rates MRI of the lumbar spine without contrast as Usually Appropriate for low back pain with radiculopathy that persists after 6 weeks of optimal medical management [S1].",
+     "cites": [
+      "S1"
+     ],
+     "verdict": "supported",
+     "note": "Matches the ACR rating for this variant"
+    },
+    {
+     "sentence": "Federal claims rules require that an appeal involving medical judgment be decided in consultation with a health care professional who has appropriate training and experience in the field of medicine involved [S2].",
+     "cites": [
+      "S2"
+     ],
+     "verdict": "supported",
+     "note": "Near-verbatim from 2560.503-1(h)(3)(iii)"
+    },
+    {
+     "sentence": "Send me, free of charge, copies of all documents, records and other information relevant to my claim, including the full text of CP-RAD-114 and the reviewer's notes [S2].",
+     "cites": [
+      "S2"
+     ],
+     "verdict": "partial",
+     "note": "Right to documents is supported; 'reviewer's notes' is the member's interpretation"
+    },
+    {
+     "sentence": "I am filing within the 180-day window stated in your notice [S3].",
+     "cites": [
+      "S3"
+     ],
+     "verdict": "supported",
+     "note": "180 days confirmed"
+    },
+    {
+     "sentence": "If this appeal is denied, I will request an independent external review [S4].",
+     "cites": [
+      "S4"
+     ],
+     "verdict": "supported",
+     "note": "Right to external review confirmed"
+    }
+   ]
+  }
+ },
+ {
+  "t": 31450,
+  "e": {
+   "type": "step",
+   "id": "timeline",
+   "status": "running"
+  }
+ },
+ {
+  "t": 31510,
+  "e": {
+   "type": "step",
+   "id": "timeline",
+   "status": "done",
+   "detail": "5 dates"
+  }
+ },
+ {
+  "t": 31520,
+  "e": {
+   "type": "done"
+  }
+ }
+]

@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: "standalone",
+  outputFileTracingIncludes: { "/api/appeal": ["./replays/**/*"] },
 };
 
 export default nextConfig;
