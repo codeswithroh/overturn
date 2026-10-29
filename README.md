@@ -24,7 +24,18 @@ Overturn routes each step to the smallest Nemotron model that can do it well, an
 | Check every citation | Nano | Each cited sentence is checked against its source quote |
 | Deadlines | Deterministic rules | ACA/ERISA/Medicare/Medicaid appeal windows |
 
-A typical run makes about 20 calls. Most are Nano; Ultra is called once. Model spend is a few cents per appeal.
+Measured on the three sample letters (recorded runs in `replays/`):
+
+| | Lumbar MRI | Glucose monitor | ER surgery |
+|---|---|---|---|
+| Model calls (incl. 5 Tavily searches) | 21 | 21 | 21 |
+| Nemotron spend | $0.0098 | $0.0091 | $0.0076 |
+| End-to-end time | 23s | 22s | 21s |
+| Share of tokens handled by Nano | 69% | 74% | 69% |
+
+Nano handles about 70% of the tokens; Ultra is called once and accounts for about 80% of model spend. That is the point: the expensive reasoning is spent on the one step that wins or loses the appeal.
+
+**Live demo:** https://overturn-eight.vercel.app
 
 **Token Factory features used:** OpenAI-compatible chat completions, Nemotron 3 Nano / Super / Ultra and Nemotron 3.5 Super VL (vision), `chat_template_kwargs.enable_thinking` to switch reasoning per call, JSON mode.
 
@@ -68,7 +79,12 @@ Overturn drafts documents for a person to review and send. It is not legal or me
 
 ## Feedback on Nebius Token Factory and NVIDIA models
 
-_(Fill in after testing: what worked, what was confusing, latency/quality notes per model.)_
+- **Drop-in OpenAI compatibility worked first try.** Pointing the OpenAI SDK at `api.tokenfactory.nebius.com/v1/` was the whole integration. `/v1/models` made it easy to confirm IDs from code.
+- **Model ID casing is inconsistent**, which cost time: `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B`, `nvidia/nemotron-3-super-120b-a12b`, `nvidia/Nemotron-3-Ultra-550b-a55b`, and `nvidia/Nemotron-3_5-Lightning` (shown as "Nemotron-3.5-Lightning" in the catalog UI). A consistent scheme, or a copy button on each catalog card, would prevent 404s.
+- **Ultra was faster than expected**: about 6–8s for a ~500-word reasoned letter, which made it practical to keep Ultra in an interactive flow instead of a background job.
+- **Nano is a strong default for high-volume structured extraction.** It produced valid JSON for letter extraction and per-source quote extraction across every run.
+- **Wish list:** per-request cost returned in the API response (we compute it from the price list), and documented support for the Nemotron `enable_thinking` switch and JSON mode per model on the model card.
+- **Tavily:** `search_depth: advanced` with `chunks_per_source` returned content focused enough that Nano could pull verbatim quotes without fetching full pages.
 
 ## License
 

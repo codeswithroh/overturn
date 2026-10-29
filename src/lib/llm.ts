@@ -8,6 +8,9 @@ import type { Tier, Trace } from "./types";
 const base = new OpenAI({
   baseURL: process.env.NEBIUS_BASE_URL ?? "https://api.tokenfactory.nebius.com/v1/",
   apiKey: process.env.NEBIUS_API_KEY ?? "missing",
+  // A stuck call should fail fast and retry, not stall the whole appeal.
+  timeout: 60_000,
+  maxRetries: 2,
 });
 // Trace every Token Factory call to LangSmith when a key is configured.
 const client = process.env.LANGSMITH_API_KEY ? (wrapOpenAI(base as never) as unknown as OpenAI) : base;
