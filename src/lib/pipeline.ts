@@ -167,7 +167,7 @@ async function argue(f: DenialFacts, sources: Source[], onTrace: (t: Trace) => v
   });
   return {
     strategy: section(raw, "strategy"),
-    letter: normalizeCites(section(raw, "letter")),
+    letter: normalizeCites(section(raw, "letter")).replace(/\*\*/g, ""),
     missing: section(raw, "missing")
       .split("\n")
       .map((l) => l.replace(/^[-*•\d.)\s]+/, "").trim())

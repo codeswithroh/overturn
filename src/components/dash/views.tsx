@@ -421,9 +421,9 @@ function VerdictBar({ checks }: { checks?: Check[] }) {
 export function LetterView({ r }: { r: R }) {
   const [copied, setCopied] = useState(false);
   const [done, setDone] = useState<Record<number, boolean>>({});
-  const checks = useMemo(() => new Map((r.checks ?? []).map((c) => [c.sentence, c])), [r.checks]);
+  const checks = useMemo(() => new Map((r.checks ?? []).map((c) => [c.sentence.replace(/\*\*/g, "").trim(), c])), [r.checks]);
   if (!r.letter) return <Card><Skeleton lines={10} /></Card>;
-  const plain = r.letter.replace(/\s*\[S\d+\]/g, "");
+  const plain = r.letter.replace(/\s*\[S\d+\]/g, "").replace(/\*\*/g, "");
   const vc = verdictCounts(r.checks);
   const n = r.checks?.length ?? 0;
 
@@ -442,7 +442,7 @@ export function LetterView({ r }: { r: R }) {
           </ActionBtn>
         </div>
         <article className="mx-auto max-w-[66ch] font-display text-[15px] leading-7 whitespace-pre-wrap">
-          {r.letter.split("\n").map((line, li) => (
+          {r.letter.replace(/\*\*/g, "").split("\n").map((line, li) => (
             <p key={li} className={line.trim() ? "" : "h-4"}>
               {splitLine(line).map((s, si) => {
                 const c = checks.get(s.trim());
