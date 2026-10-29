@@ -2,6 +2,7 @@ import { chat } from "./llm";
 import { parseJson, section } from "./json";
 import { tavilySearch, type TavilyHit } from "./tavily";
 import { buildTimeline } from "./timeline";
+import { splitSentences } from "./sentences";
 import type {
   AppealInput,
   Check,
@@ -21,6 +22,7 @@ const FACTS_SCHEMA = `{
   "state": two-letter US state or null,
   "memberName": string or null,
   "claimNumber": string or null,
+  "appealsAddress": where to send the appeal (address/fax) exactly as printed, or null,
   "serviceDenied": string,
   "procedureCodes": string[] (CPT/HCPCS),
   "diagnosisCodes": string[] (ICD-10),
@@ -155,7 +157,7 @@ async function argue(f: DenialFacts, sources: Source[], onTrace: (t: Trace) => v
       },
       {
         role: "user",
-        content: `DENIAL\n${JSON.stringify(f, null, 2)}\n\nEVIDENCE (cite as [S1], [S2]…; cite only these)\n${evidence || "(no external evidence found)"}\n\nProduce three sections, exactly in this format:\n\n<strategy>\n3-5 bullet points: the insurer's weakest point and how the letter attacks it.\n</strategy>\n\n<letter>\nA formal first-level internal appeal letter from the member, ready to print. Include: date line, insurer appeals address placeholder, member/claim identifiers, a clear request ("I request that you reverse…"), a rebuttal of each part of the stated reason with citations, a request for the full claim file and the reviewer's credentials, a request for a peer-to-peer review with the treating physician, and a statement that the member will pursue external review if denied. Keep it under 650 words. Every factual claim drawn from evidence must carry its [S#] citation.\n</letter>\n\n<missing>\nOne line per document the member should attach to strengthen the appeal.\n</missing>`,
+        content: `TODAY: ${new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}\n\nDENIAL\n${JSON.stringify(f, null, 2)}\n\nEVIDENCE (cite as [S1], [S2]…; cite only these)\n${evidence || "(no external evidence found)"}\n\nProduce three sections, exactly in this format:\n\n<strategy>\n3-5 bullet points: the insurer's weakest point and how the letter attacks it.\n</strategy>\n\n<letter>\nA formal first-level internal appeal letter from the member, ready to print. Include: today's date, the appeals address from the denial (placeholder only if missing), member/claim identifiers, a clear request ("I request that you reverse…"), a rebuttal of each part of the stated reason with citations, a request for the full claim file and the reviewer's credentials, a request for a peer-to-peer review with the treating physician, and a statement that the member will pursue external review if denied. Keep it under 650 words. Every factual claim drawn from evidence must carry its [S#] citation.\n</letter>\n\n<missing>\nOne line per document the member should attach to strengthen the appeal.\n</missing>`,
       },
     ],
     maxTokens: 6000,
@@ -174,8 +176,7 @@ async function argue(f: DenialFacts, sources: Source[], onTrace: (t: Trace) => v
 }
 
 async function verify(letter: string, sources: Source[], onTrace: (t: Trace) => void): Promise<Check[]> {
-  const sentences = letter
-    .split(/(?<=[.!?])\s+(?=[A-Z[])/)
+  const sentences = splitSentences(letter)
     .map((s) => s.trim())
     .filter((s) => /\[S\d+\]/.test(s));
   if (!sentences.length) return [];
@@ -183,7 +184,7 @@ async function verify(letter: string, sources: Source[], onTrace: (t: Trace) => 
   const items = sentences.map((s, i) => {
     const cites = [...new Set([...s.matchAll(/\[(S\d+)\]/g)].map((m) => m[1]))];
     const ev = cites
-      .map((c) => byId[c] ? `${c}: ${byId[c].facts.map((x) => `"${x.quote}"`).join(" ")}` : `${c}: (no such source)`)
+      .map((c) => byId[c] ? `${c}: ${byId[c].facts.map((x) => `${x.claim} (quote: "${x.quote}")`).join(" ")}` : `${c}: (no such source)`)
       .join("\n");
     return { i, sentence: s, cites, ev };
   });
@@ -193,7 +194,7 @@ async function verify(letter: string, sources: Source[], onTrace: (t: Trace) => 
     messages: [
       {
         role: "user",
-        content: `For each numbered sentence, decide if the cited evidence supports it. "supported" = evidence states it; "partial" = evidence is related but the sentence overreaches; "unsupported" = evidence does not say this.\n\n${items.map((x) => `#${x.i}\nSENTENCE: ${x.sentence}\nEVIDENCE:\n${x.ev}`).join("\n\n")}\n\nJSON only: {"checks":[{"i": number, "verdict": "supported"|"partial"|"unsupported", "note": short reason}]}`,
+        content: `You check citations in an appeal letter. Judge the factual claim attributed to the source, not the letter's persuasive framing. For each numbered sentence, decide if the cited evidence supports it. "supported" = evidence states it; "partial" = evidence is related but the sentence overreaches; "unsupported" = evidence does not say this.\n\n${items.map((x) => `#${x.i}\nSENTENCE: ${x.sentence}\nEVIDENCE:\n${x.ev}`).join("\n\n")}\n\nJSON only: {"checks":[{"i": number, "verdict": "supported"|"partial"|"unsupported", "note": short reason}]}`,
       },
     ],
     maxTokens: 2000,

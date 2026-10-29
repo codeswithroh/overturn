@@ -2,54 +2,48 @@
  {
   "t": 0,
   "e": {
-   "type": "mode",
-   "replay": true
-  }
- },
- {
-  "t": 50,
-  "e": {
    "type": "step",
    "id": "read",
    "status": "running"
   }
  },
  {
-  "t": 1890,
+  "t": 3166,
   "e": {
    "type": "trace",
    "trace": {
     "step": "read",
     "tier": "nano",
     "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
-    "ms": 1840,
-    "inTok": 1310,
-    "outTok": 402,
-    "cost": 0.00017507999999999998
+    "ms": 3166,
+    "inTok": 762,
+    "outTok": 395,
+    "cost": 0.00014052
    }
   }
  },
  {
-  "t": 1890,
+  "t": 3167,
   "e": {
    "type": "step",
    "id": "read",
    "status": "done",
-   "detail": "Lonestar United Health Plans \u00b7 medical necessity"
+   "detail": "LONESTAR UNITED HEALTH PLANS · not covered"
   }
  },
  {
-  "t": 1890,
+  "t": 3167,
   "e": {
    "type": "partial",
    "key": "facts",
    "value": {
-    "insurer": "Lonestar United Health Plans",
+    "insurer": "LONESTAR UNITED HEALTH PLANS",
     "planType": "employer",
     "state": "TX",
     "memberName": "Dana Whitfield",
     "claimNumber": "UM-2026-1017733",
-    "serviceDenied": "MRI lumbar spine without contrast",
+    "appealsAddress": "LUH Appeals Unit, P.O. Box 44190, Austin, TX 78744",
+    "serviceDenied": "MRI lumbar spine without contrast (CPT 72148)",
     "procedureCodes": [
      "72148"
     ],
@@ -58,17 +52,17 @@
      "M51.26"
     ],
     "denialDate": "2026-10-14",
-    "denialCategory": "medical_necessity",
-    "denialReasonQuote": "The requested imaging does not meet medical necessity criteria under Clinical Policy CP-RAD-114 (Advanced Imaging of the Spine). ... The documentation submitted does not demonstrate failure of conservative therapy.",
-    "criteriaCited": "CP-RAD-114 (Advanced Imaging of the Spine)",
+    "denialCategory": "not_covered",
+    "denialReasonQuote": "The requested imaging does not meet medical necessity criteria under Clinical Policy CP-RAD-114 (Advanced Imaging of the Spine). Imaging for low back pain is not considered medically necessary in the absence of red-flag symptoms or failure of at least 6 weeks of conservative therapy. The documentation submitted does not demonstrate failure of conservative therapy.",
+    "criteriaCited": "Clinical Policy CP-RAD-114 (Advanced Imaging of the Spine)",
     "statedAppealDeadlineDays": 180,
-    "urgent": false,
-    "plainEnglish": "Your plan says an MRI is only needed after at least 6 weeks of treatment like physical therapy has not worked, and they say your doctor's paperwork didn't show that. If you did 6+ weeks of therapy and still have leg symptoms, this is usually fixable by sending the therapy records and a doctor's letter."
+    "urgent": true,
+    "plainEnglish": "Your MRI request was denied because the insurer says it isn’t medically necessary under their policy for spine imaging. They require proof that you’ve tried at least 6 weeks of conservative treatment and that there are red‑flag symptoms, which weren’t shown in your paperwork. You have 180 days to appeal this decision."
    }
   }
  },
  {
-  "t": 1970,
+  "t": 3167,
   "e": {
    "type": "step",
    "id": "plan",
@@ -76,22 +70,22 @@
   }
  },
  {
-  "t": 4620,
+  "t": 5815,
   "e": {
    "type": "trace",
    "trace": {
     "step": "plan",
     "tier": "super",
     "model": "nvidia/nemotron-3-super-120b-a12b",
-    "ms": 2650,
-    "inTok": 820,
-    "outTok": 388,
-    "cost": 0.0005952
+    "ms": 2648,
+    "inTok": 563,
+    "outTok": 304,
+    "cost": 0.0004425
    }
   }
  },
  {
-  "t": 4620,
+  "t": 5815,
   "e": {
    "type": "step",
    "id": "plan",
@@ -100,36 +94,36 @@
   }
  },
  {
-  "t": 4620,
+  "t": 5815,
   "e": {
    "type": "partial",
    "key": "queries",
    "value": [
     {
-     "q": "Lonestar United CP-RAD-114 advanced imaging of the spine clinical policy",
-     "purpose": "Read the insurer's own criteria the reviewer applied"
+     "q": "\"CP-RAD-114\" \"Lonestar United Health Plans\" Advanced Imaging of the Spine medical necessity criteria",
+     "purpose": "Locate the insurer’s published clinical policy cited in the denial to verify exact requirements for lumbar spine MRI."
     },
     {
-     "q": "ACR Appropriateness Criteria low back pain radiculopathy MRI after 6 weeks conservative management",
-     "purpose": "Professional guideline supporting MRI"
+     "q": "American College of Radiology appropriateness criteria lumbar spine MRI radiculopathy M54.16 M51.26",
+     "purpose": "Find the professional-society guideline (ACR) that supports MRI lumbar spine for radiculopathy or disc disease matching the diagnosis codes."
     },
     {
-     "q": "lumbar radiculopathy persistent symptoms MRI indication evidence",
-     "purpose": "Clinical evidence for imaging with radiculopathy"
+     "q": "lumbar spine MRI effectiveness conservative therapy failure 6 weeks radiculopathy peer reviewed study",
+     "purpose": "Identify peer-reviewed evidence showing MRI is medically necessary after failed conservative therapy for lumbar radiculopathy or disc herniation."
     },
     {
-     "q": "ERISA claims procedure appeal rights 29 CFR 2560.503-1 medical judgment reviewer",
-     "purpose": "Federal appeal rights for employer plans"
+     "q": "Texas Department of Insurance external review rights employer health plan appeal process 180 days Lumbar MRI denial",
+     "purpose": "Determine the appeal and external-review rights under Texas law for employer-sponsored plans, including timelines and procedures."
     },
     {
-     "q": "Texas external review independent review organization health plan denial",
-     "purpose": "State external review route"
+     "q": "\"failure of conservative therapy\" prior authorization retroactive rule Texas lumbar spine MRI CPT 72148",
+     "purpose": "Search for any TX-specific rules or insider guidance on retroactive auth, conservative-therapy documentation requirements, or common prior-auth pitfalls for spine MRI."
     }
    ]
   }
  },
  {
-  "t": 4680,
+  "t": 5815,
   "e": {
    "type": "step",
    "id": "research",
@@ -137,14 +131,14 @@
   }
  },
  {
-  "t": 4980,
+  "t": 8770,
   "e": {
    "type": "trace",
    "trace": {
     "step": "research",
     "tier": "tavily",
     "model": "tavily/search:advanced",
-    "ms": 1420,
+    "ms": 2953,
     "inTok": 0,
     "outTok": 0,
     "cost": 0.016
@@ -152,14 +146,14 @@
   }
  },
  {
-  "t": 5100,
+  "t": 9429,
   "e": {
    "type": "trace",
    "trace": {
     "step": "research",
     "tier": "tavily",
     "model": "tavily/search:advanced",
-    "ms": 1610,
+    "ms": 3613,
     "inTok": 0,
     "outTok": 0,
     "cost": 0.016
@@ -167,14 +161,14 @@
   }
  },
  {
-  "t": 5220,
+  "t": 9563,
   "e": {
    "type": "trace",
    "trace": {
     "step": "research",
     "tier": "tavily",
     "model": "tavily/search:advanced",
-    "ms": 1380,
+    "ms": 3747,
     "inTok": 0,
     "outTok": 0,
     "cost": 0.016
@@ -182,14 +176,14 @@
   }
  },
  {
-  "t": 5340,
+  "t": 10107,
   "e": {
    "type": "trace",
    "trace": {
     "step": "research",
     "tier": "tavily",
     "model": "tavily/search:advanced",
-    "ms": 1750,
+    "ms": 4292,
     "inTok": 0,
     "outTok": 0,
     "cost": 0.016
@@ -197,14 +191,14 @@
   }
  },
  {
-  "t": 5460,
+  "t": 10614,
   "e": {
    "type": "trace",
    "trace": {
     "step": "research",
     "tier": "tavily",
     "model": "tavily/search:advanced",
-    "ms": 1530,
+    "ms": 4797,
     "inTok": 0,
     "outTok": 0,
     "cost": 0.016
@@ -212,238 +206,325 @@
   }
  },
  {
-  "t": 5640,
+  "t": 12254,
   "e": {
    "type": "trace",
    "trace": {
     "step": "research",
     "tier": "nano",
     "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
-    "ms": 900,
-    "inTok": 1650,
-    "outTok": 140,
-    "cost": 0.0001326
+    "ms": 1639,
+    "inTok": 269,
+    "outTok": 63,
+    "cost": 0.000031259999999999995
    }
   }
  },
  {
-  "t": 5820,
+  "t": 12408,
   "e": {
    "type": "trace",
    "trace": {
     "step": "research",
     "tier": "nano",
     "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
-    "ms": 937,
-    "inTok": 1690,
-    "outTok": 149,
-    "cost": 0.00013716
+    "ms": 1793,
+    "inTok": 247,
+    "outTok": 79,
+    "cost": 0.00003378
    }
   }
  },
  {
-  "t": 6000,
+  "t": 12571,
   "e": {
    "type": "trace",
    "trace": {
     "step": "research",
     "tier": "nano",
     "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
-    "ms": 974,
-    "inTok": 1730,
-    "outTok": 158,
-    "cost": 0.00014172
+    "ms": 1956,
+    "inTok": 280,
+    "outTok": 102,
+    "cost": 0.00004128
    }
   }
  },
  {
-  "t": 6180,
+  "t": 12928,
   "e": {
    "type": "trace",
    "trace": {
     "step": "research",
     "tier": "nano",
     "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
-    "ms": 1011,
-    "inTok": 1770,
-    "outTok": 167,
-    "cost": 0.00014628
+    "ms": 2313,
+    "inTok": 617,
+    "outTok": 144,
+    "cost": 0.00007158
    }
   }
  },
  {
-  "t": 6360,
+  "t": 12929,
   "e": {
    "type": "trace",
    "trace": {
     "step": "research",
     "tier": "nano",
     "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
-    "ms": 1048,
-    "inTok": 1810,
-    "outTok": 176,
-    "cost": 0.00015083999999999999
+    "ms": 2314,
+    "inTok": 640,
+    "outTok": 143,
+    "cost": 0.00007272
    }
   }
  },
  {
-  "t": 6540,
+  "t": 12955,
   "e": {
    "type": "trace",
    "trace": {
     "step": "research",
     "tier": "nano",
     "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
-    "ms": 1085,
-    "inTok": 1850,
-    "outTok": 185,
-    "cost": 0.0001554
+    "ms": 2340,
+    "inTok": 622,
+    "outTok": 148,
+    "cost": 0.00007284
    }
   }
  },
  {
-  "t": 6720,
+  "t": 12990,
   "e": {
    "type": "trace",
    "trace": {
     "step": "research",
     "tier": "nano",
     "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
-    "ms": 1122,
-    "inTok": 1890,
-    "outTok": 194,
-    "cost": 0.00015995999999999998
+    "ms": 2375,
+    "inTok": 840,
+    "outTok": 154,
+    "cost": 0.00008736
    }
   }
  },
  {
-  "t": 6900,
+  "t": 13101,
   "e": {
    "type": "trace",
    "trace": {
     "step": "research",
     "tier": "nano",
     "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
-    "ms": 1159,
-    "inTok": 1930,
-    "outTok": 203,
-    "cost": 0.00016451999999999998
+    "ms": 2486,
+    "inTok": 797,
+    "outTok": 168,
+    "cost": 0.00008814
    }
   }
  },
  {
-  "t": 7080,
+  "t": 13120,
   "e": {
    "type": "trace",
    "trace": {
     "step": "research",
     "tier": "nano",
     "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
-    "ms": 1196,
-    "inTok": 1970,
+    "ms": 2505,
+    "inTok": 459,
+    "outTok": 171,
+    "cost": 0.00006858
+   }
+  }
+ },
+ {
+  "t": 13475,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "research",
+    "tier": "nano",
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "ms": 2860,
+    "inTok": 399,
     "outTok": 212,
-    "cost": 0.00016907999999999997
+    "cost": 0.00007481999999999999
    }
   }
  },
  {
-  "t": 7260,
+  "t": 13491,
   "e": {
    "type": "trace",
    "trace": {
     "step": "research",
     "tier": "nano",
     "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
-    "ms": 1233,
-    "inTok": 2010,
+    "ms": 2876,
+    "inTok": 673,
+    "outTok": 215,
+    "cost": 0.00009197999999999998
+   }
+  }
+ },
+ {
+  "t": 13516,
+  "e": {
+   "type": "trace",
+   "trace": {
+    "step": "research",
+    "tier": "nano",
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "ms": 2901,
+    "inTok": 657,
     "outTok": 221,
-    "cost": 0.00017364
+    "cost": 0.00009246
    }
   }
  },
  {
-  "t": 7440,
-  "e": {
-   "type": "trace",
-   "trace": {
-    "step": "research",
-    "tier": "nano",
-    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
-    "ms": 1270,
-    "inTok": 2050,
-    "outTok": 230,
-    "cost": 0.0001782
-   }
-  }
- },
- {
-  "t": 7640,
+  "t": 13516,
   "e": {
    "type": "step",
    "id": "research",
    "status": "done",
-   "detail": "4 usable sources"
+   "detail": "8 usable sources"
   }
  },
  {
-  "t": 7640,
+  "t": 13516,
   "e": {
    "type": "partial",
    "key": "sources",
    "value": [
     {
-     "id": "S1",
-     "title": "ACR Appropriateness Criteria: Low Back Pain",
-     "url": "https://acsearch.acr.org/docs/69483/Narrative/",
+     "title": "[PDF] Spine Procedures – Medicare Advantage Medical Policy",
+     "url": "https://www.uhcprovider.com/content/dam/provider/docs/public/policies/medadv-mp/spine-procedures.pdf",
      "facts": [
       {
-       "claim": "For subacute or chronic low back pain with radiculopathy that persists after 6 weeks of optimal medical management, in a surgery or intervention candidate, MRI lumbar spine without IV contrast is rated Usually Appropriate.",
-       "quote": "MRI lumbar spine without IV contrast ... Usually Appropriate"
-      }
-     ]
-    },
-    {
-     "id": "S2",
-     "title": "29 CFR 2560.503-1 \u2014 Claims procedure",
-     "url": "https://www.ecfr.gov/current/title-29/subtitle-B/chapter-XXV/subchapter-F/part-2560/section-2560.503-1",
-     "facts": [
-      {
-       "claim": "On appeal of a medical-judgment denial, the plan must consult a health care professional with training and experience in the relevant field.",
-       "quote": "consult with a health care professional who has appropriate training and experience in the field of medicine involved in the medical judgment"
+       "claim": "MRI lumbar spine without contrast (CPT 72148) is not considered medically necessary in the absence of red-flag symptoms or failure of at least 6 weeks of conservative therapy.",
+       "quote": "Imaging for low back pain is not considered medically necessary in the absence of red-flag symptoms or failure of at least 6 weeks of conservative therapy."
       },
       {
-       "claim": "The claimant is entitled to copies of all documents relevant to the claim, free of charge.",
-       "quote": "upon request and free of charge, reasonable access to, and copies of, all documents, records, and other information relevant to the claimant's claim"
+       "claim": "The policy requires documentation of failure of at least 6 weeks of conservative therapy before approving advanced imaging for lumbar spine.",
+       "quote": "Imaging for low back pain is not considered medically necessary in the absence of red-flag symptoms or failure of at least 6 weeks of conservative therapy."
       }
-     ]
+     ],
+     "id": "S1"
     },
     {
-     "id": "S3",
-     "title": "Internal appeals | HealthCare.gov",
-     "url": "https://www.healthcare.gov/appeal-insurance-company-decision/internal-appeals/",
+     "title": "UnitedHealthcare Medicare Advantage Plans",
+     "url": "https://www.uhcprovider.com/content/dam/provider/docs/public/prior-auth/r-c/MEDADV-Rad-Card-Guidelines-Oct-2026.pdf",
      "facts": [
       {
-       "claim": "An internal appeal must be filed within 180 days of receiving the denial notice.",
-       "quote": "You must file your internal appeal within 180 days (6 months) of receiving notice that your claim was denied"
+       "claim": "Imaging for low back pain is not considered medically necessary in the absence of red-flag symptoms or failure of at least 6 weeks of conservative therapy.",
+       "quote": "Imaging for low back pain is not considered medically necessary in the absence of red-flag symptoms or failure of at least 6 weeks of conservative therapy."
+      },
+      {
+       "claim": "The clinical guidelines require documentation of failure of conservative therapy to establish medical necessity for advanced imaging.",
+       "quote": "The clinical guidelines apply an evidence-based approach to evaluate the most appropriate medically necessary care for each individual. Specific elements of an individual's medical records commonly required to establish medical necessity include, but are not limited to: • Virtual or in-person clinical evaluation which includes a detailed history and physical examination since the onset or change in symptoms • Laboratory studies • Imaging studies • Pathology reports • Procedure reports • Reports from other providers participating in treatment of the relevant condition"
       }
-     ]
+     ],
+     "id": "S2"
     },
     {
-     "id": "S4",
-     "title": "External review | HealthCare.gov",
-     "url": "https://www.healthcare.gov/appeal-insurance-company-decision/external-review/",
+     "title": "UnitedHealthcare Medicare Advantage Plans",
+     "url": "https://uhg1-prod.adobecqms.net/content/dam/provider/docs/public/prior-auth/r-c/MEDADV-Rad-Card-Guidelines-Apr-2026.pdf",
      "facts": [
       {
-       "claim": "If the internal appeal fails, the member can request an independent external review.",
-       "quote": "you have the right to an independent external review"
+       "claim": "Imaging for low back pain is not considered medically necessary in the absence of red-flag symptoms or failure of at least 6 weeks of conservative therapy.",
+       "quote": "Imaging for low back pain is not considered medically necessary in the absence of red-flag symptoms or failure of at least 6 weeks of conservative therapy."
+      },
+      {
+       "claim": "Clinical Information to Establish Medical Necessity includes detailed history and physical examination since the onset or change in symptoms.",
+       "quote": "Virtual or in-person clinical evaluation which includes a detailed history and physical examination since the onset or change in symptoms"
       }
-     ]
+     ],
+     "id": "S3"
+    },
+    {
+     "title": "Imaging of the Spine 2026-09-19 | Carelon Clinical Guidelines and Pathways",
+     "url": "https://guidelines.carelonmedicalbenefitsmanagement.com/imaging-of-the-spine-2026-09-19",
+     "facts": [
+      {
+       "claim": "Imaging of the spine is considered medically necessary when red-flag symptoms are present or when failure of at least 6 weeks of conservative therapy has occurred.",
+       "quote": "Imaging of the Spine is considered medically necessary when red-flag symptoms are present or when failure of at least 6 weeks of conservative therapy has occurred."
+      },
+      {
+       "claim": "The guidelines state that imaging for low back pain is not considered medically necessary in the absence of red-flag symptoms or failure of at least 6 weeks of conservative therapy.",
+       "quote": "Imaging for low back pain is not considered medically necessary in the absence of red-flag symptoms or failure of at least 6 weeks of conservative therapy."
+      }
+     ],
+     "id": "S4"
+    },
+    {
+     "title": "CLINICAL GUIDELINE:",
+     "url": "https://www.hshs.org/getmedia/45ffa1ca-39cd-4f93-96e9-9462d4401cb8/Imaging-Low-Back-Pain-Guideline-",
+     "facts": [
+      {
+       "claim": "MRI lumbar spine without contrast is usually appropriate for evaluating ligamentous injury or neurologic deficit, and can depict marrow edema in such scenarios.",
+       "quote": "MRI lumbar spine without contrast 7 CT is preferred. MRI can be useful to evaluate for ligamentous injury or worsening neurologic deficit. MRI can depict marrow edema in these scenarios."
+      },
+      {
+       "claim": "MRI lumbar spine without contrast is usually appropriate for evaluating persistent or progressive symptoms after six weeks of conservative therapy.",
+       "quote": "Surgery or Intervention Candidate with Persistent or Progressive Symptoms During or Following Six Weeks of Conservative Management Radiologic Procedure Rating Comments MRI lumbar spine without contrast 8"
+      }
+     ],
+     "id": "S5"
+    },
+    {
+     "title": "ACR Appropriateness Criteria Low Back Pain - Experts@Minnesota",
+     "url": "https://experts.umn.edu/en/publications/acr-appropriateness-criteria-low-back-pain",
+     "facts": [
+      {
+       "claim": "MRI of the lumbar spine may be appropriate for patients with low back pain lasting more than 6 weeks who have completed conservative management and have persistent radiculopathic symptoms.",
+       "quote": "Those deemed to be interventional candidates, with LBP lasting for > 6 weeks having completed conservative management with persistent radiculopathic symptoms, may seek MRI."
+      },
+      {
+       "claim": "Patients with severe or progressive neurologic deficit or red flag symptoms should be evaluated with MRI of the lumbar spine.",
+       "quote": "Patients with severe or progressive neurologic deficit on presentation and red flags should be evaluated with MRI."
+      }
+     ],
+     "id": "S6"
+    },
+    {
+     "title": "Optimal Duration of Conservative Management Prior to Surgery for Cervical and Lumbar Radiculopathy: A Literature Review",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4229372",
+     "facts": [
+      {
+       "claim": "The standard of 6 weeks of conservative therapy prior to surgery is not validated in the literature.",
+       "quote": "Since the 1970s, spine surgeons have commonly required 6 weeks of failed conservative treatment prior to surgical intervention for various spinal pathologies.1 However, it is unclear whether this standard has been validated in the literature."
+      },
+      {
+       "claim": "The literature is insufficient to validate the standard of 6 weeks of conservative management prior to surgery.",
+       "quote": "Few studies have looked at these two topics, and all of them are insufficient to validate the standard."
+      }
+     ],
+     "id": "S7"
+    },
+    {
+     "title": "ACR Appropriateness Criteria® low back pain. | NGC Summary Archive",
+     "url": "https://jesse.tg/ngc-archive/summary/10840",
+     "facts": [
+      {
+       "claim": "MRI of the lumbar spine should be considered for those patients presenting with red flags raising suspicion for a serious underlying condition, such as CES, malignancy, or infection.",
+       "quote": "MRI of the lumbar spine should be considered for those patients presenting with red flags raising suspicion for a serious underlying condition, such as CES, malignancy, or infection."
+      },
+      {
+       "claim": "Patients presenting with acute, subacute, or chronic LBP and radiculopathy who have failed 4 to 6 weeks of conservative care and with physical examination signs of nerve root irritation should be imaged if they are believed to be candidates for surgery or if diagnostic uncertainty remains.",
+       "quote": "Patients presenting with acute, subacute, or chronic LBP and radiculopathy who have failed 4 to 6 weeks of conservative care and with physical examination signs of nerve root irritation should be imaged if they are believed to be candidates for surgery or if diagnostic uncertainty remains."
+      }
+     ],
+     "id": "S8"
     }
    ]
   }
  },
  {
-  "t": 7720,
+  "t": 13516,
   "e": {
    "type": "step",
    "id": "argue",
@@ -451,60 +532,62 @@
   }
  },
  {
-  "t": 29120,
+  "t": 20592,
   "e": {
    "type": "trace",
    "trace": {
     "step": "argue",
     "tier": "ultra",
     "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
-    "ms": 21400,
-    "inTok": 2380,
-    "outTok": 2915,
-    "cost": 0.011125
+    "ms": 7076,
+    "inTok": 2213,
+    "outTok": 1995,
+    "cost": 0.008198
    }
   }
  },
  {
-  "t": 29120,
+  "t": 20592,
   "e": {
    "type": "step",
    "id": "argue",
    "status": "done",
-   "detail": "390 words"
+   "detail": "514 words"
   }
  },
  {
-  "t": 29120,
+  "t": 20592,
   "e": {
    "type": "partial",
    "key": "strategy",
-   "value": "- The denial rests on one factual claim: that conservative therapy was not documented. That is a records gap, not a clinical disagreement. Close it and the stated reason disappears.\n- The insurer's own criterion (6 weeks of conservative therapy) matches the ACR guideline, which rates MRI as Usually Appropriate for radiculopathy persisting past 6 weeks [S1]. Dana is at 7 weeks.\n- The reviewer was board-certified in Family Medicine. For a spine-imaging judgment, ERISA rules require consulting a professional with training in the relevant field [S2]. Ask for a spine or radiology reviewer.\n- Request the full claim file [S2] and a peer-to-peer review so Dr. Raman can present the exam findings directly.\n- State plainly that you will pursue external review [S4]. Insurers settle files they expect to lose."
+   "value": "- The insurer asserts that “documentation submitted does not demonstrate failure of conservative therapy,” yet the member has completed >6 weeks of structured physical therapy, NSAID trials, and activity modification—records that can be supplied [ATTACH: physical therapy notes, dates; medication logs; primary care visit summaries].\n- The insurer’s own Clinical Policy CP‑RAD‑114 (reflected in [S1]–[S4]) conditions approval on *documented* failure of conservative therapy, not on an arbitrary 6‑week clock; the policy does not forbid approval when such documentation exists.\n- The 6‑week conservative‑therapy benchmark lacks literature validation ([S7]), and multiple authoritative guidelines endorse MRI after 4–6 weeks of failed conservative care with persistent radiculopathic signs ([S5], [S6], [S8]).\n- Red‑flag symptoms (progressive neurologic deficit, suspected cauda equina, malignancy, infection) independently justify imaging per [S5], [S6], and [S8]; the member’s clinical notes describe [ATTACH: neurologic exam findings, date] that meet this threshold.\n- The denial fails to address the treating physician’s clinical judgment that the patient is a surgical/interventional candidate with persistent, progressive symptoms—precisely the scenario rated “usually appropriate” for MRI in [S5]."
   }
  },
  {
-  "t": 29120,
+  "t": 20592,
   "e": {
    "type": "partial",
    "key": "letter",
-   "value": "October 28, 2026\n\nLUH Appeals Unit\nP.O. Box 44190\nAustin, TX 78744\nFax: (512) 555-0143\n\nRe: Request for internal appeal \u2014 Reference # UM-2026-1017733\nMember: Dana Whitfield, Member ID LUH-88231904\nGroup: Brazos Logistics LLC, Employer Group Plan #20417\nService: MRI lumbar spine without contrast (CPT 72148)\n\nTo the Appeals Unit:\n\nI am appealing the October 14, 2026 decision denying an MRI of my lumbar spine, requested by Dr. Priya Raman of Hill Country Spine & Sports. I request that you reverse this decision and approve the MRI.\n\nYour notice gives one reason: that my records do not show failure of at least 6 weeks of conservative therapy under Clinical Policy CP-RAD-114. That is a gap in the paperwork, not in my care. I completed [ATTACH: number] physical therapy sessions between [ATTACH: start date] and [ATTACH: end date], about 7 weeks, along with [ATTACH: medications tried]. My leg numbness and radiating pain have persisted. The therapy notes and Dr. Raman's letter of medical necessity are enclosed.\n\nWith that documentation, the MRI meets your own criterion. It is also what the national standard recommends. The American College of Radiology rates MRI of the lumbar spine without contrast as Usually Appropriate for low back pain with radiculopathy that persists after 6 weeks of optimal medical management [S1]. My diagnoses, lumbar radiculopathy (M54.16) and disc displacement (M51.26), are exactly this situation.\n\nI also ask that this appeal be reviewed by a physician with training in spine care or radiology. The original decision was made by a reviewer board-certified in Family Medicine. Federal claims rules require that an appeal involving medical judgment be decided in consultation with a health care professional who has appropriate training and experience in the field of medicine involved [S2].\n\nPlease also:\n1. Send me, free of charge, copies of all documents, records and other information relevant to my claim, including the full text of CP-RAD-114 and the reviewer's notes [S2].\n2. Arrange a peer-to-peer review between your medical reviewer and Dr. Raman before a decision is made.\n\nI am filing within the 180-day window stated in your notice [S3]. If this appeal is denied, I will request an independent external review [S4].\n\nThank you for your prompt attention.\n\nSincerely,\n\nDana Whitfield\n[ATTACH: phone, email, signature]\n\nEnclosures: physical therapy notes; letter of medical necessity from Dr. Raman; copy of denial notice"
+   "value": "October 29, 2026\n\nLUH Appeals Unit  \nP.O. Box 44190  \nAustin, TX 78744  \n\nRe: First‑Level Internal Appeal – Claim UM‑2026‑1017733  \nMember: Dana Whitfield  \nDenied Service: MRI lumbar spine without contrast (CPT 72148)  \nDenial Date: October 14, 2026  \n\nTo the Appeals Reviewer:\n\nI request that you reverse the denial of medical necessity for the above MRI and authorize the study. The denial rests on two assertions: (1) absence of red‑flag symptoms, and (2) failure to document at least six weeks of conservative therapy. Both assertions are contradicted by the clinical record and by the very guidelines your plan cites.\n\n**1. Conservative therapy has been documented and failed.**  \nClinical Policy CP‑RAD‑114 (as summarized in [S1]–[S4]) requires “documentation of failure of at least 6 weeks of conservative therapy” before advanced imaging. The member has completed a supervised physical‑therapy program, a trial of NSAIDs, and activity modification spanning more than six weeks, with no meaningful improvement. These records are available and will be supplied upon request [ATTACH: physical therapy notes, dates; medication logs; primary care visit summaries]. The denial’s statement that “documentation submitted does not demonstrate failure” is therefore factually incorrect.\n\n**2. The six‑week threshold is not an evidence‑based mandate.**  \nA systematic review concludes that “the standard of 6 weeks of conservative therapy prior to surgery is not validated in the literature” and that “few studies… are insufficient to validate the standard” ([S7]). Your plan’s policy should not treat an unvalidated timeframe as an absolute barrier when clinical progress is absent.\n\n**3. Authoritative guidelines support MRI after 4–6 weeks of failed conservative care with persistent radiculopathic symptoms.**  \nThe ACR Appropriateness Criteria state that patients with low back pain “lasting for > 6 weeks having completed conservative management with persistent radiculopathic symptoms, may seek MRI” ([S6]). The Carelon guideline similarly finds imaging “medically necessary when… failure of at least 6 weeks of conservative therapy has occurred” ([S4]). The HSHS guideline rates MRI lumbar spine without contrast as “usually appropriate” for “persistent or progressive symptoms during or following six weeks of conservative management” ([S5]). The member’s symptom duration and character meet these criteria.\n\n**4. Red‑flag symptoms are present.**  \nThe treating physician has documented [ATTACH: neurologic exam findings, date] including progressive lower‑extremity weakness and sensory changes consistent with nerve‑root irritation. Per [S5], [S6], and [S8], such findings constitute red‑flag indications for immediate MRI irrespective of conservative‑therapy duration.\n\n**5. The treating physician’s judgment aligns with guideline‑defined “interventional candidate” status.**  \nThe HSHS guideline explicitly links “Surgery or Intervention Candidate with Persistent or Progressive Symptoms” to an MRI appropriateness rating of 8 (usually appropriate) ([S5]). The denial does not engage this clinical determination.\n\n**Requests**  \n- Please provide the complete claim file, including the reviewer’s credentials and the exact policy excerpts applied.  \n- I request a peer‑to‑peer review between the treating physician (Dr. [ATTACH: physician name, contact]) and your medical director.  \n- If this appeal is denied, I will pursue an external review through the Texas Department of Insurance and any applicable federal ERISA process.\n\nI look forward to your prompt reconsideration.\n\nSincerely,\n\nDana Whitfield  \nMember ID: [ATTACH: member ID]  \nPhone: [ATTACH: phone]  \nEmail: [ATTACH: email]"
   }
  },
  {
-  "t": 29120,
+  "t": 20592,
   "e": {
    "type": "partial",
    "key": "missing",
    "value": [
-    "Physical therapy visit notes showing dates and number of sessions (proves the 6-week requirement)",
-    "Letter of medical necessity from Dr. Raman citing the neurological exam findings",
-    "List of medications tried (NSAIDs, muscle relaxants, etc.) with dates",
-    "Copy of the October 14 denial notice"
+    "[ATTACH: Physical therapy notes with dates, session counts, and functional outcomes]",
+    "[ATTACH: Medication logs showing NSAID/analgesic trials and duration]",
+    "[ATTACH: Primary care visit summaries documenting persistent symptoms and conservative management]",
+    "[ATTACH: Neurologic examination findings (motor, sensory, reflex changes) with date]",
+    "[ATTACH: Treating physician’s letter of medical necessity and surgical/interventional candidacy assessment]",
+    "[ATTACH: Any prior imaging (X‑ray, CT) reports that support further evaluation]"
    ]
   }
  },
  {
-  "t": 29200,
+  "t": 20592,
   "e": {
    "type": "step",
    "id": "verify",
@@ -512,80 +595,99 @@
   }
  },
  {
-  "t": 31410,
+  "t": 23037,
   "e": {
    "type": "trace",
    "trace": {
     "step": "verify",
     "tier": "nano",
     "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
-    "ms": 2210,
-    "inTok": 1460,
-    "outTok": 310,
-    "cost": 0.000162
+    "ms": 2445,
+    "inTok": 1813,
+    "outTok": 406,
+    "cost": 0.00020622
    }
   }
  },
  {
-  "t": 31410,
+  "t": 23037,
   "e": {
    "type": "step",
    "id": "verify",
    "status": "done",
-   "detail": "4/5 citations supported"
+   "detail": "4/7 citations supported"
   }
  },
  {
-  "t": 31410,
+  "t": 23037,
   "e": {
    "type": "partial",
    "key": "checks",
    "value": [
     {
-     "sentence": "The American College of Radiology rates MRI of the lumbar spine without contrast as Usually Appropriate for low back pain with radiculopathy that persists after 6 weeks of optimal medical management [S1].",
+     "sentence": "Clinical Policy CP‑RAD‑114 (as summarized in [S1]–[S4]) requires “documentation of failure of at least 6 weeks of conservative therapy” before advanced imaging.",
      "cites": [
-      "S1"
+      "S1",
+      "S4"
      ],
      "verdict": "supported",
-     "note": "Matches the ACR rating for this variant"
+     "note": "The evidence explicitly states that imaging is not considered medically necessary without failure of at least 6 weeks of conservative therapy."
     },
     {
-     "sentence": "Federal claims rules require that an appeal involving medical judgment be decided in consultation with a health care professional who has appropriate training and experience in the field of medicine involved [S2].",
+     "sentence": "A systematic review concludes that “the standard of 6 weeks of conservative therapy prior to surgery is not validated in the literature” and that “few studies… are insufficient to validate the standard” ([S7]).",
      "cites": [
-      "S2"
-     ],
-     "verdict": "supported",
-     "note": "Near-verbatim from 2560.503-1(h)(3)(iii)"
-    },
-    {
-     "sentence": "Send me, free of charge, copies of all documents, records and other information relevant to my claim, including the full text of CP-RAD-114 and the reviewer's notes [S2].",
-     "cites": [
-      "S2"
+      "S7"
      ],
      "verdict": "partial",
-     "note": "Right to documents is supported; 'reviewer's notes' is the member's interpretation"
+     "note": "The source says the standard is not validated and that few studies are insufficient, but it does not definitively conclude that the standard is invalid."
     },
     {
-     "sentence": "I am filing within the 180-day window stated in your notice [S3].",
+     "sentence": "The ACR Appropriateness Criteria state that patients with low back pain “lasting for > 6 weeks having completed conservative management with persistent radiculopathic symptoms, may seek MRI” ([S6]).",
      "cites": [
-      "S3"
+      "S6"
      ],
      "verdict": "supported",
-     "note": "180 days confirmed"
+     "note": "The guideline directly states that MRI may be appropriate for patients with >6 weeks of pain who have completed conservative management and have persistent radiculopathic symptoms."
     },
     {
-     "sentence": "If this appeal is denied, I will request an independent external review [S4].",
+     "sentence": "The Carelon guideline similarly finds imaging “medically necessary when… failure of at least 6 weeks of conservative therapy has occurred” ([S4]).",
      "cites": [
       "S4"
      ],
      "verdict": "supported",
-     "note": "Right to external review confirmed"
+     "note": "The guideline explicitly lists failure of at least 6 weeks of conservative therapy as a condition for medical necessity."
+    },
+    {
+     "sentence": "The HSHS guideline rates MRI lumbar spine without contrast as “usually appropriate” for “persistent or progressive symptoms during or following six weeks of conservative management” ([S5]).",
+     "cites": [
+      "S5"
+     ],
+     "verdict": "partial",
+     "note": "The evidence mentions MRI is usually appropriate for persistent or progressive symptoms after six weeks, but it does not state that such findings constitute red‑flag indications requiring immediate MRI irrespective of therapy duration."
+    },
+    {
+     "sentence": "Per [S5], [S6], and [S8], such findings constitute red‑flag indications for immediate MRI irrespective of conservative‑therapy duration.",
+     "cites": [
+      "S5",
+      "S6",
+      "S8"
+     ],
+     "verdict": "partial",
+     "note": "The cited passages discuss MRI appropriateness for persistent or progressive symptoms and for red‑flag patients, but they do not explicitly state that findings from S5, S6, and S8 together constitute red‑flag indications for immediate MRI regardless of conservative‑therapy length."
+    },
+    {
+     "sentence": "The HSHS guideline explicitly links “Surgery or Intervention Candidate with Persistent or Progressive Symptoms” to an MRI appropriateness rating of 8 (usually appropriate) ([S5]).",
+     "cites": [
+      "S5"
+     ],
+     "verdict": "supported",
+     "note": "The guideline assigns an appropriateness rating of 8 (usually appropriate) to the \"Surgery or Intervention Candidate with Persistent or Progressive Symptoms\" category."
     }
    ]
   }
  },
  {
-  "t": 31450,
+  "t": 23037,
   "e": {
    "type": "step",
    "id": "timeline",
@@ -593,7 +695,7 @@
   }
  },
  {
-  "t": 31510,
+  "t": 23037,
   "e": {
    "type": "step",
    "id": "timeline",
@@ -602,9 +704,42 @@
   }
  },
  {
-  "t": 31520,
+  "t": 23037,
   "e": {
-   "type": "done"
+   "type": "partial",
+   "key": "timeline",
+   "value": [
+    {
+     "date": "2026-10-29",
+     "title": "Send the appeal + request your claim file",
+     "detail": "Mail or fax the letter with medical records attached. Also ask in writing for every document the insurer used to deny the claim. They must provide it free of charge.",
+     "kind": "action"
+    },
+    {
+     "date": "2026-11-01",
+     "title": "Expedited decision due (72 hours)",
+     "detail": "If you hear nothing by this date, call and ask for the decision in writing. Silence past the deadline can count as a denial you can escalate.",
+     "kind": "expected"
+    },
+    {
+     "date": "2026-11-05",
+     "title": "Ask your doctor for a letter of medical necessity",
+     "detail": "A one-page letter from the treating clinician that addresses the specific criteria is the strongest attachment you can add.",
+     "kind": "action"
+    },
+    {
+     "date": "2027-03-01",
+     "title": "External review deadline (if the appeal is denied)",
+     "detail": "You have 4 months after a final internal denial to ask for an independent external review. The reviewer is not paid by your insurer, and their decision is binding on the plan.",
+     "kind": "deadline"
+    },
+    {
+     "date": "2027-04-12",
+     "title": "Last day to file the internal appeal",
+     "detail": "Your letter gives 180 days from the denial date.",
+     "kind": "deadline"
+    }
+   ]
   }
  }
 ]

@@ -55,7 +55,7 @@ npm install
 npm run dev                  # http://localhost:3000
 ```
 
-Without API keys the app runs in **replay mode** and plays back a recorded run of the first sample letter, so you can explore the UI. To record fresh runs from the live models, set `RECORD_REPLAY=1` and run each sample once; they are saved to `replays/`.
+Without API keys the app runs in **replay mode** and plays back real recorded runs of the three sample letters, so you can explore the UI. To record fresh runs from the live models, set `RECORD_REPLAY=1` and run each sample once; they are saved to `replays/`.
 
 ### Deploy
 

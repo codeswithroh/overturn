@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { splitLine } from "@/lib/sentences";
 import { toIcs } from "@/lib/timeline";
 import type { AppealResult, Check } from "@/lib/types";
 
@@ -142,7 +143,7 @@ function Letter({ r }: { r: Partial<AppealResult> }) {
       <article className="mx-auto max-w-[68ch] whitespace-pre-wrap font-display text-[15px] leading-7">
         {r.letter.split(/\n/).map((line, li) => (
           <p key={li} className={line.trim() ? "" : "h-4"}>
-            {line.split(/(?<=[.!?])\s+(?=[A-Z[])/).map((s, si) => {
+            {splitLine(line).map((s, si) => {
               const c = checks.get(s.trim());
               return (
                 <span key={si}>

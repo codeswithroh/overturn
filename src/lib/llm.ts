@@ -1,13 +1,16 @@
 import OpenAI from "openai";
+import { wrapOpenAI } from "langsmith/wrappers";
 import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import { MODELS, tokenCost } from "./models";
 import { stripThinking } from "./json";
 import type { Tier, Trace } from "./types";
 
-const client = new OpenAI({
+const base = new OpenAI({
   baseURL: process.env.NEBIUS_BASE_URL ?? "https://api.tokenfactory.nebius.com/v1/",
   apiKey: process.env.NEBIUS_API_KEY ?? "missing",
 });
+// Trace every Token Factory call to LangSmith when a key is configured.
+const client = process.env.LANGSMITH_API_KEY ? (wrapOpenAI(base as never) as unknown as OpenAI) : base;
 
 export interface CallOpts {
   step: string;

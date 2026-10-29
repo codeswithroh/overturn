@@ -22,6 +22,7 @@ export interface DenialFacts {
   state: string | null;
   memberName: string | null;
   claimNumber: string | null;
+  appealsAddress: string | null;
   serviceDenied: string;
   procedureCodes: string[];
   diagnosisCodes: string[];
