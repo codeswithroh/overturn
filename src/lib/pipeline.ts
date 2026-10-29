@@ -2,7 +2,7 @@ import { chat } from "./llm";
 import { parseJson, section } from "./json";
 import { tavilySearch, type TavilyHit } from "./tavily";
 import { buildTimeline } from "./timeline";
-import { splitSentences } from "./sentences";
+import { normalizeCites, splitSentences } from "./sentences";
 import type {
   AppealInput,
   Check,
@@ -167,7 +167,7 @@ async function argue(f: DenialFacts, sources: Source[], onTrace: (t: Trace) => v
   });
   return {
     strategy: section(raw, "strategy"),
-    letter: section(raw, "letter"),
+    letter: normalizeCites(section(raw, "letter")),
     missing: section(raw, "missing")
       .split("\n")
       .map((l) => l.replace(/^[-*•\d.)\s]+/, "").trim())

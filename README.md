@@ -12,7 +12,7 @@ In the US, insurers deny a large share of in-network claims, yet only a tiny fra
 
 ## How it uses NVIDIA Nemotron on Nebius Token Factory
 
-Overturn routes each step to the smallest Nemotron model that can do it well, and shows the routing live in the "Engine room" panel (model, latency, tokens and cost for every call).
+Overturn routes each step to the smallest Nemotron model that can do it well, and the dashboard charts the routing live: every call on a timeline, colored by model, with latency, tokens and cost on hover.
 
 | Step | Model (Token Factory) | Why this model |
 |---|---|---|
@@ -35,7 +35,7 @@ Measured on the three sample letters (recorded runs in `replays/`):
 
 Nano handles about 70% of the tokens; Ultra is called once and accounts for about 80% of model spend. That is the point: the expensive reasoning is spent on the one step that wins or loses the appeal.
 
-**Live demo:** https://overturn-eight.vercel.app
+**Live demo:** https://overturn-eight.vercel.app (landing) · https://overturn-eight.vercel.app/app (dashboard)
 
 **Token Factory features used:** OpenAI-compatible chat completions, Nemotron 3 Nano / Super / Ultra and Nemotron 3.5 Super VL (vision), `chat_template_kwargs.enable_thinking` to switch reasoning per call, JSON mode.
 
@@ -56,7 +56,9 @@ Browser (Next.js) ──POST /api/appeal──▶ Node route (streams NDJSON eve
    timeline ── rules engine ─────────────┘
 ```
 
-Key files: `src/lib/pipeline.ts` (agent steps), `src/lib/llm.ts` (Token Factory client and cost tracing), `src/lib/models.ts` (model IDs and prices), `src/lib/timeline.ts` (appeal deadlines and .ics export).
+The UI is split in two: a landing page at `/` and a dashboard at `/app`. The dashboard shows each appeal as charts rather than text: days left, citations verified, a timeline of every model call by step, tokens by model, a deadline calendar, and the letter with each cited sentence underlined by its check result.
+
+Key files: `src/components/dash/` (dashboard), `src/lib/pipeline.ts` (agent steps), `src/lib/llm.ts` (Token Factory client and cost tracing), `src/lib/models.ts` (model IDs and prices), `src/lib/timeline.ts` (appeal deadlines and .ics export).
 
 ## Run it
 

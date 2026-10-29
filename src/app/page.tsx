@@ -1,254 +1,221 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
-import { EngineRoom, Pipeline, STEPS, type StepState } from "@/components/EngineRoom";
-import { Results } from "@/components/Results";
+import Link from "next/link";
+import { Icon, Logo } from "@/components/dash/ui";
 import { SAMPLES } from "@/lib/samples";
-import { buildTimeline } from "@/lib/timeline";
-import type { AppealResult, PipelineEvent, StepId, Trace } from "@/lib/types";
 
-type Phase = "input" | "running" | "done";
-type Upload = { name: string; kind: "image" | "pdf"; dataUrl: string };
+const STEPS = [
+  { n: 1, title: "Read", text: "Pulls the reason, codes and deadline from your letter.", model: "Nano · Super VL for photos", color: "var(--t-nano)" },
+  { n: 2, title: "Research", text: "Searches the insurer's policy, clinical guidelines and federal appeal rules.", model: "Super + Tavily", color: "var(--t-tavily)" },
+  { n: 3, title: "Argue", text: "Answers the insurer's exact reason, point by point, with citations.", model: "Ultra", color: "var(--t-ultra)" },
+  { n: 4, title: "Check", text: "Tests every cited sentence against the source before you see it.", model: "Nano", color: "var(--t-nano)" },
+];
 
-const idleSteps = () => Object.fromEntries(STEPS.map((s) => [s.id, { status: "idle" }])) as Record<StepId, StepState>;
+// Measured on the three sample letters (see replays/ in the repo).
+const SPLIT = {
+  tokens: [
+    { k: "Nano", v: 70, c: "var(--t-nano)" },
+    { k: "Super", v: 5, c: "var(--t-super)" },
+    { k: "Ultra", v: 25, c: "var(--t-ultra)" },
+  ],
+  cost: [
+    { k: "Nano", v: 13, c: "var(--t-nano)" },
+    { k: "Super", v: 5, c: "var(--t-super)" },
+    { k: "Ultra", v: 82, c: "var(--t-ultra)" },
+  ],
+};
 
-export default function Home() {
-  const [phase, setPhase] = useState<Phase>("input");
-  const [text, setText] = useState("");
-  const [sampleId, setSampleId] = useState<string | null>(null);
-  const [upload, setUpload] = useState<Upload | null>(null);
-  const [steps, setSteps] = useState(idleSteps);
-  const [traces, setTraces] = useState<Trace[]>([]);
-  const [result, setResult] = useState<Partial<AppealResult>>({});
-  const [error, setError] = useState<string | null>(null);
-  const [replay, setReplay] = useState(false);
-  const [elapsed, setElapsed] = useState(0);
-  const started = useRef(0);
-
-  useEffect(() => {
-    if (phase !== "running") return;
-    const id = setInterval(() => setElapsed(Date.now() - started.current), 100);
-    return () => clearInterval(id);
-  }, [phase]);
-
-  function pickSample(id: string) {
-    const s = SAMPLES.find((x) => x.id === id)!;
-    setSampleId(id);
-    setText(s.text);
-    setUpload(null);
-  }
-
-  function onFile(file: File) {
-    const reader = new FileReader();
-    reader.onload = () =>
-      setUpload({ name: file.name, kind: file.type === "application/pdf" ? "pdf" : "image", dataUrl: reader.result as string });
-    reader.readAsDataURL(file);
-    setSampleId(null);
-    setText("");
-  }
-
-  async function run() {
-    setPhase("running");
-    setSteps(idleSteps());
-    setTraces([]);
-    setResult({});
-    setError(null);
-    started.current = Date.now();
-    setElapsed(0);
-
-    const body = upload
-      ? upload.kind === "pdf"
-        ? { pdfDataUrl: upload.dataUrl }
-        : { imageDataUrl: upload.dataUrl }
-      : sampleId && SAMPLES.find((s) => s.id === sampleId)?.text === text
-        ? { sampleId }
-        : { text };
-
-    const res = await fetch("/api/appeal", { method: "POST", body: JSON.stringify(body) });
-    const reader = res.body!.getReader();
-    const dec = new TextDecoder();
-    let buf = "";
-    for (;;) {
-      const { value, done } = await reader.read();
-      if (done) break;
-      buf += dec.decode(value, { stream: true });
-      const lines = buf.split("\n");
-      buf = lines.pop()!;
-      for (const line of lines) if (line.trim()) handle(JSON.parse(line) as PipelineEvent);
-    }
-    setElapsed(Date.now() - started.current);
-    setPhase("done");
-  }
-
-  function handle(e: PipelineEvent) {
-    switch (e.type) {
-      case "mode":
-        setReplay(e.replay);
-        break;
-      case "step":
-        setSteps((s) => ({ ...s, [e.id]: { status: e.status, detail: e.detail } }));
-        // Deadlines are deterministic, so recorded runs can rebuild them locally.
-        if (e.id === "timeline" && e.status === "done")
-          setResult((r) => (r.timeline || !r.facts ? r : { ...r, timeline: buildTimeline(r.facts) }));
-        break;
-      case "trace":
-        setTraces((t) => [...t, e.trace]);
-        break;
-      case "partial":
-        setResult((r) => ({ ...r, [e.key]: e.value }));
-        break;
-      case "error":
-        setError(e.message);
-        break;
-    }
-  }
-
-  const canRun = Boolean(upload || text.trim().length > 40);
-
+export default function Landing() {
   return (
-    <main className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
-      <header className="no-print flex items-center justify-between py-5">
-        <button onClick={() => setPhase("input")} className="flex items-center gap-2">
+    <div className="overflow-x-hidden">
+      <header className="mx-auto flex max-w-6xl items-center gap-6 px-4 py-5 sm:px-6">
+        <Link href="/" className="flex items-center gap-2.5">
           <Logo />
-          <span className="font-display text-xl font-semibold tracking-tight">Overturn</span>
-        </button>
-        <span className="hidden text-xs text-ink-3 sm:block">NVIDIA Nemotron · Nebius Token Factory · Tavily</span>
+          <span className="text-lg font-semibold tracking-tight">Overturn</span>
+        </Link>
+        <nav className="ml-auto hidden items-center gap-7 text-sm text-ink-2 md:flex">
+          <a href="#how" className="hover:text-ink">How it works</a>
+          <a href="#samples" className="hover:text-ink">Samples</a>
+          <a href="https://github.com/codeswithroh/overturn" className="hover:text-ink">GitHub</a>
+        </nav>
+        <Link href="/app" className="ml-auto rounded-xl bg-ink px-4 py-2 text-sm font-medium text-white md:ml-0">
+          Open dashboard
+        </Link>
       </header>
 
-      {phase === "input" ? (
-        <section className="grid gap-10 pt-6 lg:grid-cols-[1fr_1.1fr] lg:pt-14">
-          <div>
-            <h1 className="font-display text-4xl leading-[1.05] tracking-tight sm:text-6xl">
-              Your insurer said no.
-              <br />
-              <span className="text-accent">Make them read the evidence.</span>
-            </h1>
-            <p className="mt-5 max-w-md text-ink-2">
-              Fewer than 1 in 100 denied claims are ever appealed, yet many appeals succeed. Upload your denial letter. In about a minute
-              you get a plain-English explanation, a cited appeal letter and every deadline that matters.
-            </p>
-            <ul className="mt-8 space-y-3 text-sm text-ink-2">
-              {[
-                ["Reads", "the letter, photo or PDF, and finds the exact reason you were denied"],
-                ["Researches", "your insurer's policy, clinical guidelines and your legal appeal rights, live"],
-                ["Argues", "point by point against that reason, citing only sources it actually found"],
-                ["Checks", "every cited sentence against its source before you send it"],
-              ].map(([b, t]) => (
-                <li key={b} className="flex gap-2">
-                  <span className="text-accent">✓</span>
-                  <span>
-                    <b className="font-medium text-ink">{b}</b> {t}
-                  </span>
-                </li>
-              ))}
-            </ul>
+      {/* hero */}
+      <section className="mx-auto grid max-w-6xl items-center gap-12 px-4 pt-10 pb-20 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:pt-16">
+        <div>
+          <span className="inline-flex items-center gap-2 rounded-full bg-card px-3 py-1 text-xs text-ink-2 shadow-sm">
+            <span className="size-1.5 rounded-full bg-[var(--t-ultra)]" /> NVIDIA Nemotron on Nebius Token Factory
+          </span>
+          <h1 className="mt-6 font-display text-5xl leading-[1.02] tracking-tight sm:text-6xl">
+            Your claim was denied.
+            <br />
+            <span className="text-accent">Appeal it today.</span>
+          </h1>
+          <p className="mt-6 max-w-md text-lg leading-relaxed text-ink-2">
+            Upload the denial letter. Get an appeal letter with sources, plus every deadline on your calendar. It takes about 20
+            seconds.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/app" className="flex items-center gap-2 rounded-2xl bg-accent px-6 py-3.5 font-medium text-white shadow-[0_12px_24px_-12px_var(--accent)]">
+              Start an appeal <Icon name="arrow" className="size-4" />
+            </Link>
+            <Link href="/app?sample=er" className="rounded-2xl bg-card px-6 py-3.5 font-medium shadow-sm">
+              Try a sample
+            </Link>
           </div>
-
-          <div className="rounded-2xl border border-line bg-surface p-5 shadow-[0_1px_0_var(--line)] sm:p-6">
-            <label
-              className="flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-line bg-surface-2/50 px-4 py-6 text-center transition-colors hover:border-accent"
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                e.preventDefault();
-                const f = e.dataTransfer.files[0];
-                if (f) onFile(f);
-              }}
-            >
-              <input
-                type="file"
-                accept="image/*,application/pdf"
-                className="sr-only"
-                onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])}
-              />
-              {upload ? (
-                <span className="text-sm">
-                  <b className="font-medium">{upload.name}</b>
-                  <span className="text-ink-3"> · {upload.kind === "image" ? "read by Nemotron Super VL" : "PDF"}</span>
-                </span>
-              ) : (
-                <>
-                  <span className="text-sm font-medium">Drop a photo or PDF of your denial letter</span>
-                  <span className="mt-1 text-xs text-ink-3">or paste the text below</span>
-                </>
-              )}
-            </label>
-
-            <textarea
-              value={text}
-              onChange={(e) => {
-                setText(e.target.value);
-                setUpload(null);
-              }}
-              placeholder="Paste your denial letter or Explanation of Benefits here…"
-              className="mt-3 h-44 w-full resize-none rounded-xl border border-line bg-surface p-3 font-mono text-xs leading-5 outline-none focus:border-accent"
-            />
-
-            <p className="mt-4 text-xs uppercase tracking-wide text-ink-3">Or try a sample (fictional)</p>
-            <div className="mt-2 grid gap-2 sm:grid-cols-3">
-              {SAMPLES.map((s) => (
-                <button
-                  key={s.id}
-                  onClick={() => pickSample(s.id)}
-                  className={`rounded-xl border p-3 text-left transition-colors ${
-                    sampleId === s.id ? "border-accent bg-accent-soft/50" : "border-line hover:border-ink-3"
-                  }`}
-                >
-                  <span className="block text-sm font-medium leading-tight">{s.label}</span>
-                  <span className="mt-1 block text-xs leading-snug text-ink-3">{s.blurb}</span>
-                </button>
-              ))}
-            </div>
-
-            <button
-              onClick={run}
-              disabled={!canRun}
-              className="mt-5 w-full rounded-xl bg-accent px-4 py-3 font-medium text-accent-ink transition-opacity disabled:opacity-40"
-            >
-              Build my appeal
-            </button>
-            <p className="mt-3 text-center text-[11px] leading-4 text-ink-3">
-              Overturn drafts documents for you to review. It is not legal or medical advice. Don&apos;t upload letters you aren&apos;t
-              allowed to share.
-            </p>
-          </div>
-        </section>
-      ) : (
-        <section className="grid gap-6 pt-4 lg:grid-cols-[340px_1fr]">
-          <aside className="no-print space-y-6 lg:sticky lg:top-4 lg:self-start">
-            {replay && (
-              <div className="rounded-xl border border-warn/40 bg-warn-soft/50 p-3 text-xs text-warn">
-                Replay mode: no API keys are set, so this is a recorded run (sped up). Add NEBIUS_API_KEY and TAVILY_API_KEY for live results.
+          <dl className="mt-12 grid max-w-md grid-cols-3 gap-6">
+            {[
+              ["~20s", "per appeal"],
+              ["<1¢", "model cost"],
+              ["100%", "citations checked"],
+            ].map(([v, l]) => (
+              <div key={l}>
+                <dt className="text-2xl font-semibold tabular-nums">{v}</dt>
+                <dd className="text-sm text-ink-3">{l}</dd>
               </div>
-            )}
-            <div className="rounded-2xl border border-line bg-surface p-3">
-              <Pipeline steps={steps} />
-            </div>
-            <div className="rounded-2xl border border-line bg-surface p-4">
-              <p className="mb-3 text-xs font-medium uppercase tracking-wide text-ink-3">Engine room</p>
-              <EngineRoom traces={traces} elapsed={elapsed} />
-            </div>
-            {phase === "done" && (
-              <button onClick={() => setPhase("input")} className="w-full rounded-xl border border-line px-4 py-2.5 text-sm">
-                Start another appeal
-              </button>
-            )}
-          </aside>
-          <div className="min-w-0 space-y-4">
-            {error && <div className="rounded-xl border border-bad/40 bg-bad-soft p-4 text-sm text-bad">{error}</div>}
-            <Results r={result} />
+            ))}
+          </dl>
+        </div>
+        <HeroMock />
+      </section>
+
+      {/* how */}
+      <section id="how" className="bg-card py-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <h2 className="font-display text-3xl tracking-tight sm:text-4xl">Four steps, one minute</h2>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {STEPS.map((s) => (
+              <div key={s.n} className="rounded-3xl bg-bg p-6">
+                <div className="flex items-center justify-between">
+                  <span className="grid size-10 place-items-center rounded-2xl bg-card text-sm font-semibold shadow-sm">{s.n}</span>
+                  <span className="flex items-center gap-1.5 text-xs text-ink-3">
+                    <span className="size-2 rounded-full" style={{ background: s.color }} />
+                    {s.model}
+                  </span>
+                </div>
+                <h3 className="mt-6 text-lg font-semibold">{s.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-2">{s.text}</p>
+              </div>
+            ))}
           </div>
-        </section>
-      )}
-    </main>
+        </div>
+      </section>
+
+      {/* model split */}
+      <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+        <div className="grid items-center gap-10 rounded-[32px] bg-ink p-8 text-white sm:p-12 lg:grid-cols-2">
+          <div>
+            <h2 className="font-display text-3xl tracking-tight sm:text-4xl">Small models read. The big one argues.</h2>
+            <p className="mt-4 max-w-md text-white/65">
+              Nano handles most of the reading and checking. Ultra is called once, to write the argument.
+            </p>
+          </div>
+          <div className="space-y-7">
+            {(
+              [
+                ["Tokens", SPLIT.tokens],
+                ["Cost", SPLIT.cost],
+              ] as const
+            ).map(([label, rows]) => (
+              <div key={label}>
+                <div className="mb-2 text-sm text-white/60">{label}</div>
+                <div className="flex h-4 gap-0.5 overflow-hidden rounded-full">
+                  {rows.map((r) => (
+                    <div key={r.k} style={{ width: `${r.v}%`, background: r.c }} />
+                  ))}
+                </div>
+                <div className="mt-2 flex gap-5 text-xs text-white/70">
+                  {rows.map((r) => (
+                    <span key={r.k} className="flex items-center gap-1.5">
+                      <span className="size-2 rounded-full" style={{ background: r.c }} />
+                      {r.k} {r.v}%
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* samples */}
+      <section id="samples" className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
+        <h2 className="font-display text-3xl tracking-tight sm:text-4xl">Try a real-looking denial</h2>
+        <p className="mt-2 text-ink-2">Fictional letters. Live research.</p>
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
+          {SAMPLES.map((s) => (
+            <Link key={s.id} href={`/app?sample=${s.id}`} className="card group p-6 transition-transform hover:-translate-y-0.5">
+              <p className="text-xs font-medium tracking-wide text-bad uppercase">{s.label.split(" · ")[1]}</p>
+              <p className="mt-2 text-lg font-semibold">{s.label.split(" · ")[0]}</p>
+              <p className="mt-2 text-sm text-ink-2">{s.blurb}</p>
+              <span className="mt-6 inline-flex items-center gap-1 text-sm font-medium text-accent">
+                Run it <Icon name="arrow" className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <footer className="border-t border-line">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-4 px-4 py-8 text-sm text-ink-3 sm:px-6">
+          <Logo size={22} />
+          <span>Drafting help, not legal or medical advice.</span>
+          <span className="ml-auto">NVIDIA Nemotron · Nebius Token Factory · Tavily · MIT</span>
+        </div>
+      </footer>
+    </div>
   );
 }
 
-function Logo() {
+/* A static picture of the dashboard, drawn with the same parts. */
+function HeroMock() {
   return (
-    <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden>
-      <rect width="32" height="32" rx="8" fill="var(--accent)" />
-      <path d="M10 19.5a6.5 6.5 0 1 0 2-9.4" stroke="var(--accent-ink)" strokeWidth="2.6" fill="none" strokeLinecap="round" />
-      <path d="M9 7.5v5h5" stroke="var(--accent-ink)" strokeWidth="2.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <div className="relative">
+      <div className="absolute -inset-6 -z-10 rounded-[40px] bg-gradient-to-br from-accent-soft via-transparent to-[#dbeafe]" />
+      <div className="card p-5">
+        <div className="grid grid-cols-2 gap-3">
+          {[
+            ["152", "Days left", "linear-gradient(135deg,#1f8a66,#17694f)"],
+            ["4/5", "Citations verified", "linear-gradient(135deg,#3b82f6,#1d4ed8)"],
+            ["8", "Sources", "linear-gradient(135deg,#8b5cf6,#6d28d9)"],
+            ["$0.009", "Model cost", "linear-gradient(135deg,#1e293b,#0f172a)"],
+          ].map(([v, l, g]) => (
+            <div key={l} className="rounded-2xl p-4 text-white" style={{ background: g }}>
+              <div className="text-2xl font-semibold tabular-nums">{v}</div>
+              <div className="mt-1 text-xs opacity-85">{l}</div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-3 rounded-2xl bg-soft p-4">
+          <div className="mb-3 flex items-center justify-between text-xs text-ink-3">
+            <span className="font-medium text-ink">Agent run</span>
+            <span>21 calls · 22s</span>
+          </div>
+          {[
+            ["Read", [[0, 12, "var(--t-nano)"]]],
+            ["Plan", [[12, 28, "var(--t-super)"]]],
+            ["Research", [[28, 44, "var(--t-tavily)"], [44, 62, "var(--t-nano)"]]],
+            ["Argue", [[62, 90, "var(--t-ultra)"]]],
+            ["Verify", [[90, 99, "var(--t-nano)"]]],
+          ].map(([label, bars]) => (
+            <div key={label as string} className="flex items-center gap-3 py-1">
+              <span className="w-16 text-[11px] text-ink-2">{label as string}</span>
+              <div className="relative h-2 flex-1">
+                {(bars as [number, number, string][]).map(([a, b, c], i) => (
+                  <span key={i} className="absolute h-2 rounded-full" style={{ left: `${a}%`, width: `${b - a}%`, background: c }} />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-3 rounded-2xl bg-soft p-4 font-display text-[13px] leading-6 text-ink-2">
+          The American College of Radiology rates this MRI as{" "}
+          <span className="underline decoration-[var(--ok)] decoration-2 underline-offset-4">Usually Appropriate</span> after 6 weeks of
+          therapy<sup className="ml-0.5 rounded bg-white px-1 font-sans text-[10px]">S1</sup>. I completed{" "}
+          <mark className="rounded bg-warn-soft px-1 font-sans text-[12px] text-warn">number</mark> sessions…
+        </div>
+      </div>
+    </div>
   );
 }

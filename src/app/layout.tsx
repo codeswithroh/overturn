@@ -7,7 +7,7 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 const fraunces = Fraunces({ variable: "--font-fraunces", subsets: ["latin"], axes: ["opsz"] });
 
 export const metadata: Metadata = {
-  title: "Overturn — appeal your insurance denial",
+  title: "Overturn",
   description:
     "Upload a health insurance denial letter. Overturn researches the evidence and drafts a cited appeal in about a minute. Built on NVIDIA Nemotron via Nebius Token Factory.",
 };

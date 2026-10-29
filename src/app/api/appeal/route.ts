@@ -45,7 +45,7 @@ export async function POST(req: Request) {
           for (const { t, e } of replay) {
             await new Promise((r) => setTimeout(r, Math.min(t - last, 2500)));
             last = t;
-            send(e);
+            send(e.type === "trace" ? { ...e, trace: { ...e.trace, endAt: e.trace.endAt ?? t } } : e);
           }
         }
         send({ type: "done" });
@@ -63,8 +63,10 @@ export async function POST(req: Request) {
       // RECORD_REPLAY=1 saves sample runs so the app can be demoed without keys.
       const t0 = Date.now();
       const log: { t: number; e: PipelineEvent }[] = [];
-      const emit = (e: PipelineEvent) => {
-        log.push({ t: Date.now() - t0, e });
+      const emit = (ev: PipelineEvent) => {
+        const t = Date.now() - t0;
+        const e = ev.type === "trace" ? { ...ev, trace: { ...ev.trace, endAt: t } } : ev;
+        log.push({ t, e });
         send(e);
       };
       try {

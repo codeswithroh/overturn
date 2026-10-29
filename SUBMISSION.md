@@ -3,7 +3,7 @@
 **Project name:** Overturn
 **Tagline:** Your insurer said no. Make them read the evidence.
 **Track:** Best Apps and Agents
-**Demo:** https://overturn-eight.vercel.app
+**Demo:** https://overturn-eight.vercel.app (dashboard at /app)
 **Repo:** https://github.com/codeswithroh/overturn
 
 ## Inspiration
@@ -25,7 +25,7 @@ Next.js app with a streaming agent pipeline on **Nebius Token Factory**, routing
 - **Nemotron 3 Ultra** (thinking on): writes the argument, called exactly once.
 - **Tavily** advanced search is the evidence layer.
 
-The "Engine room" panel shows every call live: model, latency, tokens and cost. Measured: 21 calls, ~22 seconds and under 1 cent of Nemotron spend per appeal. Nano handles ~70% of tokens; Ultra accounts for ~80% of model spend, on the one step that matters most. Every Token Factory call is also traced in LangSmith.
+The dashboard charts every call live on a timeline, colored by model, with a tokens-by-model donut and a running cost card. Measured: 21 calls, ~22 seconds and under 1 cent of Nemotron spend per appeal. Nano handles ~70% of tokens; Ultra accounts for ~80% of model spend, on the one step that matters most. Every Token Factory call is also traced in LangSmith.
 
 ## Challenges
 Keeping the letter honest. Our first verifier passes marked most citations "partial" because sentence splitting merged letter headers with claims. Splitting per line and giving the verifier both the extracted claim and the verbatim quote fixed it. We also force the letter to use placeholders for anything about the patient's history.
@@ -49,9 +49,9 @@ nvidia-nemotron, nebius-token-factory, tavily, next.js, typescript, tailwindcss,
 | Time | Show | Say |
 |---|---|---|
 | 0:00–0:15 | Landing page | "Insurers deny claims every day, and almost nobody appeals, even though many appeals win. The problem is the paperwork. This is Overturn." |
-| 0:15–0:30 | Click the ER sample, then Build my appeal | "Here's a real-looking denial: a $38,000 emergency appendectomy denied for no prior authorization." |
-| 0:30–1:15 | Pipeline + Engine room filling in | "Nemotron Nano reads the letter. Super plans the research. Tavily searches live, and Nano pulls verbatim quotes from each source. Watch the engine room: every call, its model, latency and cost." |
+| 0:15–0:30 | Landing page → Try a sample (ER) | "Here's a real-looking denial: a $38,000 emergency appendectomy denied for no prior authorization." |
+| 0:30–1:15 | Dashboard: stepper, run chart and stat cards filling in live | "Nemotron Nano reads the letter. Super plans the research. Tavily searches live, and Nano pulls verbatim quotes from each source. Each bar in the run chart is one model call, colored by model." |
 | 1:15–1:45 | Ultra step finishes; open Appeal letter | "Only now do we call Nemotron Ultra, once, to write the argument. It rebuts the exact reason given and cites only what we found." |
 | 1:45–2:10 | Hover underlined sentences, show ATTACH highlights | "Nano then checks every citation against its source. Green is verified. Anything about the patient that we can't know is a placeholder, never a guess." |
 | 2:10–2:30 | Evidence tab, then Deadlines tab + .ics | "Every source with its quote. Every deadline, straight to your calendar." |
-| 2:30–3:00 | Engine room totals; README routing table | "Twenty-one calls, about twenty seconds, under one cent of Nemotron spend. Nano does most of the work; Ultra does the part that wins. Built on NVIDIA Nemotron and Nebius Token Factory." |
+| 2:30–3:00 | Model mix donut + cost card; README routing table | "Twenty-one calls, about twenty seconds, under one cent of Nemotron spend. Nano does most of the work; Ultra does the part that wins. Built on NVIDIA Nemotron and Nebius Token Factory." |

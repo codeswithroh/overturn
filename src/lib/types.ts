@@ -69,6 +69,7 @@ export interface Trace {
   inTok: number;
   outTok: number;
   cost: number; // USD
+  endAt?: number; // ms since run start, set by the API route
 }
 
 export interface AppealResult {
