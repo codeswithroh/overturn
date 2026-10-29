@@ -1,135 +1,159 @@
 import Link from "next/link";
+import { HeroScene, IconCalendar, IconEvidence, IconLetter, Wave } from "@/components/landing/art";
 import { Icon, Logo } from "@/components/dash/ui";
 import { SAMPLES } from "@/lib/samples";
 
-const STEPS = [
-  { n: 1, title: "Read", text: "Pulls the reason, codes and deadline from your letter.", model: "Nano · Super VL for photos", color: "var(--t-nano)" },
-  { n: 2, title: "Research", text: "Searches the insurer's policy, clinical guidelines and federal appeal rules.", model: "Super + Tavily", color: "var(--t-tavily)" },
-  { n: 3, title: "Argue", text: "Answers the insurer's exact reason, point by point, with citations.", model: "Ultra", color: "var(--t-ultra)" },
-  { n: 4, title: "Check", text: "Tests every cited sentence against the source before you see it.", model: "Nano", color: "var(--t-nano)" },
+const CREAM = "#fbf4ee";
+
+const FEATURES = [
+  { art: <IconEvidence />, title: "Evidence", text: "Your insurer's own policy, the clinical guideline and your appeal rights, found live and quoted word for word." },
+  { art: <IconLetter />, title: "Letter", text: "A formal appeal that answers the exact reason you were denied. Every claim cites a source." },
+  { art: <IconCalendar />, title: "Deadlines", text: "Your filing window, when the insurer must reply and when to ask for an outside review. One tap to your calendar." },
 ];
 
 // Measured on the three sample letters (see replays/ in the repo).
-const SPLIT = {
-  tokens: [
-    { k: "Nano", v: 70, c: "var(--t-nano)" },
-    { k: "Super", v: 5, c: "var(--t-super)" },
-    { k: "Ultra", v: 25, c: "var(--t-ultra)" },
-  ],
-  cost: [
-    { k: "Nano", v: 13, c: "var(--t-nano)" },
-    { k: "Super", v: 5, c: "var(--t-super)" },
-    { k: "Ultra", v: 82, c: "var(--t-ultra)" },
-  ],
-};
+const SPLIT = [
+  { label: "Tokens", rows: [["Nano", 70, "var(--t-nano)"], ["Super", 5, "var(--t-super)"], ["Ultra", 25, "var(--t-ultra)"]] },
+  { label: "Cost", rows: [["Nano", 13, "var(--t-nano)"], ["Super", 5, "var(--t-super)"], ["Ultra", 82, "var(--t-ultra)"]] },
+] as const;
+
+function Rule() {
+  return <span className="mx-auto mb-6 block h-0.5 w-12 rounded bg-[#e5484d]" />;
+}
 
 export default function Landing() {
   return (
-    <div className="overflow-x-hidden">
-      <header className="mx-auto flex max-w-6xl items-center gap-6 px-4 py-5 sm:px-6">
-        <Link href="/" className="flex items-center gap-2.5">
-          <Logo />
-          <span className="text-lg font-semibold tracking-tight">Overturn</span>
+    <div className="overflow-x-hidden bg-white text-[#13213c]">
+      {/* nav */}
+      <header className="mx-auto flex max-w-6xl items-center gap-8 px-4 py-4 sm:px-6">
+        <Link href="/" className="flex items-center gap-2">
+          <Logo size={26} />
+          <span className="text-lg font-semibold tracking-tight text-accent">overturn</span>
         </Link>
-        <nav className="ml-auto hidden items-center gap-7 text-sm text-ink-2 md:flex">
-          <a href="#how" className="hover:text-ink">How it works</a>
-          <a href="#samples" className="hover:text-ink">Samples</a>
-          <a href="https://github.com/codeswithroh/overturn" className="hover:text-ink">GitHub</a>
+        <nav className="mx-auto hidden gap-8 text-sm md:flex">
+          <a href="#what" className="hover:text-accent">What you get</a>
+          <a href="#how" className="hover:text-accent">How it works</a>
+          <a href="#samples" className="hover:text-accent">Samples</a>
+          <a href="https://github.com/codeswithroh/overturn" className="hover:text-accent">Source</a>
         </nav>
-        <Link href="/app" className="ml-auto rounded-xl bg-ink px-4 py-2 text-sm font-medium text-white md:ml-0">
-          Open dashboard
-        </Link>
+        <div className="ml-auto flex gap-2 md:ml-0">
+          <Link href="/app" className="hidden rounded-lg border-2 border-[#13213c] px-4 py-1.5 text-sm font-medium sm:block">
+            Dashboard
+          </Link>
+          <Link href="/app" className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white">
+            Start an appeal
+          </Link>
+        </div>
       </header>
 
       {/* hero */}
-      <section className="mx-auto grid max-w-6xl items-center gap-12 px-4 pt-10 pb-20 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:pt-16">
-        <div>
-          <span className="inline-flex items-center gap-2 rounded-full bg-card px-3 py-1 text-xs text-ink-2 shadow-sm">
-            <span className="size-1.5 rounded-full bg-[var(--t-ultra)]" /> NVIDIA Nemotron on Nebius Token Factory
-          </span>
-          <h1 className="mt-6 font-display text-5xl leading-[1.02] tracking-tight sm:text-6xl">
-            Your claim was denied.
+      <section className="pt-14 text-center sm:pt-20">
+        <div className="mx-auto max-w-3xl px-4">
+          <h1 className="font-display text-5xl leading-[1.04] font-semibold tracking-tight sm:text-7xl">
+            Your insurer said no.
             <br />
-            <span className="text-accent">Appeal it today.</span>
+            Write back.
           </h1>
-          <p className="mt-6 max-w-md text-lg leading-relaxed text-ink-2">
-            Upload the denial letter. Get an appeal letter with sources, plus every deadline on your calendar. It takes about 20
-            seconds.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/app" className="flex items-center gap-2 rounded-2xl bg-accent px-6 py-3.5 font-medium text-white shadow-[0_12px_24px_-12px_var(--accent)]">
-              Start an appeal <Icon name="arrow" className="size-4" />
+          <p className="mt-5 text-lg text-[#13213c]/75">Upload the denial letter. Get a cited appeal in 20 seconds.</p>
+          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <Link href="/app" className="w-full rounded-xl bg-accent px-10 py-3.5 font-medium text-white sm:w-auto">
+              Start an appeal
             </Link>
-            <Link href="/app?sample=er" className="rounded-2xl bg-card px-6 py-3.5 font-medium shadow-sm">
+            <Link href="/app?sample=er" className="w-full rounded-xl px-6 py-3.5 font-medium underline decoration-2 underline-offset-4 sm:w-auto">
               Try a sample
             </Link>
           </div>
-          <dl className="mt-12 grid max-w-md grid-cols-3 gap-6">
-            {[
-              ["~20s", "per appeal"],
-              ["<1¢", "model cost"],
-              ["100%", "citations checked"],
-            ].map(([v, l]) => (
-              <div key={l}>
-                <dt className="text-2xl font-semibold tabular-nums">{v}</dt>
-                <dd className="text-sm text-ink-3">{l}</dd>
-              </div>
-            ))}
-          </dl>
+          <ul className="mt-8 flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm text-[#13213c]/70">
+            <li className="flex items-center gap-2"><Icon name="check" className="size-4 text-accent" /> Every citation checked</li>
+            <li className="flex items-center gap-2"><Icon name="shield" className="size-4 text-accent" /> Free and open source</li>
+            <li className="flex items-center gap-2"><Icon name="clock" className="size-4 text-accent" /> Federal deadlines built in</li>
+          </ul>
         </div>
-        <HeroMock />
+        <div className="mx-auto mt-6 max-w-6xl px-2">
+          <HeroScene />
+        </div>
       </section>
 
-      {/* how */}
-      <section id="how" className="bg-card py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <h2 className="font-display text-3xl tracking-tight sm:text-4xl">Four steps, one minute</h2>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {STEPS.map((s) => (
-              <div key={s.n} className="rounded-3xl bg-bg p-6">
-                <div className="flex items-center justify-between">
-                  <span className="grid size-10 place-items-center rounded-2xl bg-card text-sm font-semibold shadow-sm">{s.n}</span>
-                  <span className="flex items-center gap-1.5 text-xs text-ink-3">
-                    <span className="size-2 rounded-full" style={{ background: s.color }} />
-                    {s.model}
-                  </span>
+      {/* what you get */}
+      <section id="what" style={{ background: CREAM }} className="pt-20">
+        <div className="mx-auto max-w-5xl px-4 text-center">
+          <Rule />
+          <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">Three things, ready to send.</h2>
+          <div className="mt-14 grid gap-12 sm:grid-cols-3">
+            {FEATURES.map((f) => (
+              <div key={f.title} className="flex flex-col items-center">
+                {f.art}
+                <h3 className="mt-4 text-xl font-semibold">{f.title}</h3>
+                <p className="mt-2 max-w-xs text-sm leading-relaxed text-[#13213c]/75">{f.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="mt-20">
+          <Wave fill="#ffffff" />
+        </div>
+      </section>
+
+      {/* dashboard row (illustration left, text right) */}
+      <section id="how" className="mx-auto grid max-w-6xl items-center gap-14 px-4 py-24 sm:px-6 lg:grid-cols-2">
+        <div className="relative mx-auto grid aspect-square w-full max-w-md place-items-center">
+          <div className="absolute inset-4 rounded-full border-[48px] border-accent" />
+          <div className="relative w-[86%] rounded-2xl bg-white p-4 shadow-[0_24px_48px_-20px_rgb(19_33_60/0.35)]">
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                ["165", "days left", "#17694f"],
+                ["4/5", "verified", "#2563eb"],
+              ].map(([v, l, c]) => (
+                <div key={l} className="rounded-xl p-3 text-white" style={{ background: c }}>
+                  <div className="text-xl font-semibold">{v}</div>
+                  <div className="text-[11px] opacity-85">{l}</div>
                 </div>
-                <h3 className="mt-6 text-lg font-semibold">{s.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-ink-2">{s.text}</p>
-              </div>
-            ))}
+              ))}
+            </div>
+            <div className="mt-3 space-y-1.5">
+              {[
+                [0, 14, "var(--t-nano)"],
+                [14, 30, "var(--t-super)"],
+                [30, 60, "var(--t-tavily)"],
+                [60, 90, "var(--t-ultra)"],
+                [90, 100, "var(--t-nano)"],
+              ].map(([a, b, c], i) => (
+                <div key={i} className="relative h-2 rounded-full bg-[#f1f4f8]">
+                  <span className="absolute h-2 rounded-full" style={{ left: `${a}%`, width: `${(b as number) - (a as number)}%`, background: c as string }} />
+                </div>
+              ))}
+            </div>
           </div>
+        </div>
+        <div>
+          <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">Watch it work.</h2>
+          <p className="mt-4 max-w-md leading-relaxed text-[#13213c]/75">
+            The dashboard draws every step as it happens: each model call on a timeline, the sources it found, which sentences passed
+            the check, and the days you have left.
+          </p>
+          <Link href="/app?sample=mri" className="mt-6 inline-flex items-center gap-1.5 font-medium text-accent">
+            Open the dashboard <Icon name="arrow" className="size-4" />
+          </Link>
         </div>
       </section>
 
-      {/* model split */}
-      <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-        <div className="grid items-center gap-10 rounded-[32px] bg-ink p-8 text-white sm:p-12 lg:grid-cols-2">
-          <div>
-            <h2 className="font-display text-3xl tracking-tight sm:text-4xl">Small models read. The big one argues.</h2>
-            <p className="mt-4 max-w-md text-white/65">
-              Nano handles most of the reading and checking. Ultra is called once, to write the argument.
-            </p>
-          </div>
-          <div className="space-y-7">
-            {(
-              [
-                ["Tokens", SPLIT.tokens],
-                ["Cost", SPLIT.cost],
-              ] as const
-            ).map(([label, rows]) => (
-              <div key={label}>
-                <div className="mb-2 text-sm text-white/60">{label}</div>
+      {/* models row (text left, chart right) */}
+      <section className="mx-auto grid max-w-6xl items-center gap-14 px-4 pb-24 sm:px-6 lg:grid-cols-2">
+        <div className="lg:order-2">
+          <div className="rounded-3xl bg-[#13213c] p-8 text-white">
+            {SPLIT.map((s) => (
+              <div key={s.label} className="mb-6 last:mb-0">
+                <div className="mb-2 text-sm text-white/60">{s.label}</div>
                 <div className="flex h-4 gap-0.5 overflow-hidden rounded-full">
-                  {rows.map((r) => (
-                    <div key={r.k} style={{ width: `${r.v}%`, background: r.c }} />
+                  {s.rows.map(([k, v, c]) => (
+                    <div key={k} style={{ width: `${v}%`, background: c }} />
                   ))}
                 </div>
-                <div className="mt-2 flex gap-5 text-xs text-white/70">
-                  {rows.map((r) => (
-                    <span key={r.k} className="flex items-center gap-1.5">
-                      <span className="size-2 rounded-full" style={{ background: r.c }} />
-                      {r.k} {r.v}%
+                <div className="mt-2 flex gap-5 text-xs text-white/75">
+                  {s.rows.map(([k, v, c]) => (
+                    <span key={k} className="flex items-center gap-1.5">
+                      <span className="size-2 rounded-full" style={{ background: c }} />
+                      {k} {v}%
                     </span>
                   ))}
                 </div>
@@ -137,85 +161,43 @@ export default function Landing() {
             ))}
           </div>
         </div>
-      </section>
-
-      {/* samples */}
-      <section id="samples" className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
-        <h2 className="font-display text-3xl tracking-tight sm:text-4xl">Try a real-looking denial</h2>
-        <p className="mt-2 text-ink-2">Fictional letters. Live research.</p>
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          {SAMPLES.map((s) => (
-            <Link key={s.id} href={`/app?sample=${s.id}`} className="card group p-6 transition-transform hover:-translate-y-0.5">
-              <p className="text-xs font-medium tracking-wide text-bad uppercase">{s.label.split(" · ")[1]}</p>
-              <p className="mt-2 text-lg font-semibold">{s.label.split(" · ")[0]}</p>
-              <p className="mt-2 text-sm text-ink-2">{s.blurb}</p>
-              <span className="mt-6 inline-flex items-center gap-1 text-sm font-medium text-accent">
-                Run it <Icon name="arrow" className="size-3.5 transition-transform group-hover:translate-x-0.5" />
-              </span>
-            </Link>
-          ))}
+        <div className="lg:order-1">
+          <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">Small models read. The big one argues.</h2>
+          <p className="mt-4 max-w-md leading-relaxed text-[#13213c]/75">
+            NVIDIA Nemotron Nano reads letters and checks citations. Ultra is called once, to write the argument. A full appeal costs
+            under one cent in model time on Nebius Token Factory.
+          </p>
         </div>
       </section>
 
-      <footer className="border-t border-line">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-4 px-4 py-8 text-sm text-ink-3 sm:px-6">
-          <Logo size={22} />
+      {/* samples, Oscar-style ruled columns on a green field */}
+      <section id="samples" className="bg-accent text-white">
+        <Wave fill="#ffffff" flip />
+        <div className="mx-auto max-w-6xl px-4 pt-14 pb-20 sm:px-6">
+          <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">Try one of these.</h2>
+          <p className="mt-2 text-white/70">Fictional letters, real research.</p>
+          <div className="mt-10 grid gap-8 sm:grid-cols-3">
+            {SAMPLES.map((s) => (
+              <Link key={s.id} href={`/app?sample=${s.id}`} className="group border-t-2 border-white/80 pt-4">
+                <p className="text-[11px] font-semibold tracking-widest uppercase opacity-75">{s.label.split(" · ")[1]}</p>
+                <p className="mt-2 text-xl font-semibold">{s.label.split(" · ")[0]}</p>
+                <p className="mt-1 text-sm text-white/75">{s.blurb}</p>
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium">
+                  Run it <Icon name="arrow" className="size-4 transition-transform group-hover:translate-x-1" />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <footer className="bg-[#13213c] text-white/70">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-8 text-sm sm:px-6">
+          <span className="font-semibold text-white">overturn</span>
           <span>Drafting help, not legal or medical advice.</span>
-          <span className="ml-auto">NVIDIA Nemotron · Nebius Token Factory · Tavily · MIT</span>
+          <span className="sm:ml-auto">NVIDIA Nemotron · Nebius Token Factory · Tavily · MIT</span>
         </div>
       </footer>
-    </div>
-  );
-}
-
-/* A static picture of the dashboard, drawn with the same parts. */
-function HeroMock() {
-  return (
-    <div className="relative">
-      <div className="absolute -inset-6 -z-10 rounded-[40px] bg-gradient-to-br from-accent-soft via-transparent to-[#dbeafe]" />
-      <div className="card p-5">
-        <div className="grid grid-cols-2 gap-3">
-          {[
-            ["152", "Days left", "linear-gradient(135deg,#1f8a66,#17694f)"],
-            ["4/5", "Citations verified", "linear-gradient(135deg,#3b82f6,#1d4ed8)"],
-            ["8", "Sources", "linear-gradient(135deg,#8b5cf6,#6d28d9)"],
-            ["$0.009", "Model cost", "linear-gradient(135deg,#1e293b,#0f172a)"],
-          ].map(([v, l, g]) => (
-            <div key={l} className="rounded-2xl p-4 text-white" style={{ background: g }}>
-              <div className="text-2xl font-semibold tabular-nums">{v}</div>
-              <div className="mt-1 text-xs opacity-85">{l}</div>
-            </div>
-          ))}
-        </div>
-        <div className="mt-3 rounded-2xl bg-soft p-4">
-          <div className="mb-3 flex items-center justify-between text-xs text-ink-3">
-            <span className="font-medium text-ink">Agent run</span>
-            <span>21 calls · 22s</span>
-          </div>
-          {[
-            ["Read", [[0, 12, "var(--t-nano)"]]],
-            ["Plan", [[12, 28, "var(--t-super)"]]],
-            ["Research", [[28, 44, "var(--t-tavily)"], [44, 62, "var(--t-nano)"]]],
-            ["Argue", [[62, 90, "var(--t-ultra)"]]],
-            ["Verify", [[90, 99, "var(--t-nano)"]]],
-          ].map(([label, bars]) => (
-            <div key={label as string} className="flex items-center gap-3 py-1">
-              <span className="w-16 text-[11px] text-ink-2">{label as string}</span>
-              <div className="relative h-2 flex-1">
-                {(bars as [number, number, string][]).map(([a, b, c], i) => (
-                  <span key={i} className="absolute h-2 rounded-full" style={{ left: `${a}%`, width: `${b - a}%`, background: c }} />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="mt-3 rounded-2xl bg-soft p-4 font-display text-[13px] leading-6 text-ink-2">
-          The American College of Radiology rates this MRI as{" "}
-          <span className="underline decoration-[var(--ok)] decoration-2 underline-offset-4">Usually Appropriate</span> after 6 weeks of
-          therapy<sup className="ml-0.5 rounded bg-white px-1 font-sans text-[10px]">S1</sup>. I completed{" "}
-          <mark className="rounded bg-warn-soft px-1 font-sans text-[12px] text-warn">number</mark> sessions…
-        </div>
-      </div>
     </div>
   );
 }
